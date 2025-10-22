@@ -10,17 +10,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await GeneralHelper.init();
-  //  await dotenv.load(
-  //   fileName: AppEnvironment.envFileName,
-  // ); 
+  await dotenv.load(fileName: AppEnvironment.envFileName);
   final sharedPreferences = await SharedPreferences.getInstance();
   final storage = await HydratedStorage.build(
     storageDirectory: HydratedStorageDirectory(
       (await getApplicationDocumentsDirectory()).path,
     ),
-  );  HydratedBloc.storage = storage;
+  );
+  HydratedBloc.storage = storage;
 
-  runApp(ModularApp(module: MainModule(sharedPreferences: sharedPreferences), child: const MainWidget()));
+  runApp(
+    ModularApp(
+      module: MainModule(sharedPreferences: sharedPreferences),
+      child: const MainWidget(),
+    ),
+  );
 }

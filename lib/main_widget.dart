@@ -10,6 +10,7 @@ import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
 import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
 import 'package:learning_app/modules/app/presentation/blocs/app_state.dart';
+import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
 
 class MainWidget extends StatefulWidget {
   const MainWidget({super.key});
@@ -27,30 +28,10 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
     super.initState();
 
     /* always open splash first */
-    Modular.setInitialRoute('${AppRoutes.moduleApp}${AppModuleRoutes.main}');
+    Modular.setInitialRoute(
+      '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
+    );
     Modular.setNavigatorKey(AppKeys.navigatorKey);
-
-    /// 🔥 Firebase Analytics screen tracking
-    // Modular.to.addListener(() {
-    //   Utils.debugLog('Current path: ${Modular.to.path}');
-    //   final currentPath = Modular.to.path;
-    //   FirebaseAnalytics.instance.logScreenView(screenName: currentPath);
-
-    //   if (_maxFrequency > 0) {
-    //     if (_currentCount < _maxFrequency) {
-    //       _currentCount++;
-    //     } else {
-    //       AdmobService.prepare(
-    //         AdType.interstitial,
-    //         onLoaded: () {
-    //           AdmobService.showInterstitialAd();
-    //         },
-    //         onFailed: () {},
-    //       );
-    //       _currentCount = 0;
-    //     }
-    //   }
-    // });
   }
 
   @override
@@ -65,49 +46,47 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
       data: MediaQuery.of(
         context,
       ).copyWith(textScaler: const TextScaler.linear(1)),
-      child:  MaterialApp.router(
-            title: GeneralHelper.appName,
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.theme,
-            // locale: appLanguage.locale,
-            scaffoldMessengerKey: AppKeys.scaffoldMessengerKey,
-            // localizationsDelegates: const [
-            //   AppLocalizations.delegate,
-            //   GlobalMaterialLocalizations.delegate,
-            //   GlobalWidgetsLocalizations.delegate,
-            //   GlobalCupertinoLocalizations.delegate,
-            // ],
-            // supportedLocales: AppLocalizations.supportedLocales,
-            routerConfig: Modular.routerConfig,
-            localeResolutionCallback: (locale, supportedLocales) {
-              if (locale == null) return supportedLocales.first;
+      child: MaterialApp.router(
+        title: GeneralHelper.appName,
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.theme,
+        // locale: appLanguage.locale,
+        scaffoldMessengerKey: AppKeys.scaffoldMessengerKey,
+        // localizationsDelegates: const [
+        //   AppLocalizations.delegate,
+        //   GlobalMaterialLocalizations.delegate,
+        //   GlobalWidgetsLocalizations.delegate,
+        //   GlobalCupertinoLocalizations.delegate,
+        // ],
+        // supportedLocales: AppLocalizations.supportedLocales,
+        routerConfig: Modular.routerConfig,
+        localeResolutionCallback: (locale, supportedLocales) {
+          if (locale == null) return supportedLocales.first;
 
-              for (final supported in supportedLocales) {
-                if (supported.languageCode == locale.languageCode) {
-                  return supported;
-                }
+          for (final supported in supportedLocales) {
+            if (supported.languageCode == locale.languageCode) {
+              return supported;
+            }
+          }
+
+          return supportedLocales.first; // fallback to en
+        },
+        localeListResolutionCallback: (locales, supportedLocales) {
+          if (locales == null || locales.isEmpty) {
+            return supportedLocales.first;
+          }
+
+          for (final locale in locales) {
+            for (final supported in supportedLocales) {
+              if (supported.languageCode == locale.languageCode) {
+                return supported;
               }
+            }
+          }
 
-              return supportedLocales.first; // fallback to en
-            },
-            localeListResolutionCallback: (locales, supportedLocales) {
-              if (locales == null || locales.isEmpty) {
-                return supportedLocales.first;
-              }
-
-              for (final locale in locales) {
-                for (final supported in supportedLocales) {
-                  if (supported.languageCode == locale.languageCode) {
-                    return supported;
-                  }
-                }
-              }
-
-              return supportedLocales.first; // fallback to en
-            },
-          ),
-        
-      
+          return supportedLocales.first; // fallback to en
+        },
+      ),
     );
   }
 
