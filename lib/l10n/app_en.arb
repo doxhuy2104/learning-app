@@ -1,0 +1,22 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "signIn":"Sign in",
+  "signUp":"Sign up",
+  "haveAccount":"Already have an account?",
+  "dontHaveAccount":"Don't have an account?",
+  "email":"Email",
+  "password":"Password",
+  "confirmPassword":"Confirm password",
+  "createAccount":"Create account",
+  "ortherLogin":"Or login with",
+  "enterEmail":"Enter email address",
+  "enterPassword":"Enter password",
+  "forgotPassword":"Forgot password?",
+  "invalidEmail":"Invalid email",
+  "passwordMustLeast8Char":"Password must be at least 8 characters",
+  "sendEmail":"Send email",
+  "googleLogin":"Login with Google"
+}

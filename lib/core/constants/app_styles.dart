@@ -27,7 +27,7 @@ enum Styles {
   const Styles({
     required this.fontSize,
     required this.height,
-    this.fontFamily = 'SVN Gilroy',
+    this.fontFamily = 'BeVietnamPro',
   });
 }
 

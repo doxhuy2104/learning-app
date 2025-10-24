@@ -7,6 +7,7 @@ import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/constants/app_theme.dart';
 import 'package:learning_app/core/helpers/general_helper.dart';
 import 'package:learning_app/core/utils/utils.dart';
+import 'package:learning_app/l10n/app_localizations.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
 import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
 import 'package:learning_app/modules/app/presentation/blocs/app_state.dart';
@@ -52,13 +53,13 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
         theme: AppTheme.theme,
         // locale: appLanguage.locale,
         scaffoldMessengerKey: AppKeys.scaffoldMessengerKey,
-        // localizationsDelegates: const [
-        //   AppLocalizations.delegate,
-        //   GlobalMaterialLocalizations.delegate,
-        //   GlobalWidgetsLocalizations.delegate,
-        //   GlobalCupertinoLocalizations.delegate,
-        // ],
-        // supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: Modular.routerConfig,
         localeResolutionCallback: (locale, supportedLocales) {
           if (locale == null) return supportedLocales.first;

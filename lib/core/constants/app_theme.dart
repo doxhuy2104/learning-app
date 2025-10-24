@@ -4,8 +4,8 @@ import 'package:learning_app/core/constants/app_colors.dart';
 
 class AppTheme {
   static ThemeData get theme => ThemeData(
-    fontFamily: 'SVN Gilroy',
-    brightness: Brightness.dark,
+    fontFamily: 'BeVietnamPro',
+    brightness: Brightness.light,
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: <TargetPlatform, PageTransitionsBuilder>{
         TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -27,26 +27,18 @@ class AppTheme {
         systemNavigationBarIconBrightness: Brightness.light,
         systemNavigationBarColor: Colors.transparent,
       ),
-
-      // systemOverlayStyle: SystemUiOverlayStyle(
-      //   statusBarColor: Colors.black, // <-- SEE HERE
-      //   statusBarIconBrightness:
-      //       Brightness.light, //<-- For Android SEE HERE (dark icons)
-      //   statusBarBrightness:
-      //       Brightness.light, //<-- For iOS SEE HERE (dark icons)
-      // ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       surfaceTintColor: Colors.black,
     ),
     dialogTheme: const DialogThemeData(surfaceTintColor: Colors.white),
     textSelectionTheme: TextSelectionThemeData(
-      cursorColor: AppColors.primaryHighlight, // Cursor color
-      selectionColor: AppColors.primaryHighlight.withValues(
+      cursorColor: AppColors.primary, // Cursor color
+      selectionColor: AppColors.primary.withValues(
         alpha: 0.2,
       ), // Background color when text is selected
       selectionHandleColor:
-          AppColors.primaryHighlight, // Handle color (the draggable circles)
+          AppColors.primary, // Handle color (the draggable circles)
     ),
   );
 }

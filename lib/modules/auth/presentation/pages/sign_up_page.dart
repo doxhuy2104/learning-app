@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:learning_app/core/components/app_annotated_region.dart';
+import 'package:learning_app/core/components/buttons/button.dart';
 import 'package:learning_app/core/components/buttons/outline_button.dart';
 import 'package:learning_app/core/components/buttons/primary_button.dart';
 import 'package:learning_app/core/components/inputs/text_input.dart';
@@ -23,14 +24,14 @@ import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
 import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
 import 'package:learning_app/modules/auth/presentation/blocs/auth_bloc.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -47,6 +48,7 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return AppAnnotatedRegion(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         // appBar: AppBar(
         //   title: Text(context.localization.signIn, style: Styles.h3.smb),
@@ -55,8 +57,30 @@ class _SignInPageState extends State<SignInPage> {
           children: [
             Positioned(
               top: AppDimensions.insetTop(context),
-              left: 16,
-              child: Text(context.localization.signIn, style: Styles.h3.smb),
+              left: 8,
+              child: Row(
+                children: [
+                  Button(
+                    borderRadius: BorderRadius.circular(44),
+                    onPress: () {
+                      NavigationHelper.goBack();
+                    },
+                    child: SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: SvgPicture.asset(
+                        width: 10,
+                        AppIcons.icArrowLeft,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black,
+                          BlendMode.srcIn,
+                        ),
+                      ).paddingAll(8),
+                    ),
+                  ),
+                  Text(context.localization.signUp, style: Styles.h3.smb),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -100,24 +124,28 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     validator: AppValidator.validatePassword,
                   ),
-                  4.verticalSpace,
-                  Container(
-                    width: double.infinity,
-                    alignment: AlignmentGeometry.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationHelper.push(
-                          '${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}',
-                        );
-                      },
-                      child: Text(
-                        context.localization.forgotPassword,
-                        style: Styles.medium.regular.copyWith(
-                          color: AppColors.contentText,
-                        ),
-                      ).paddingSymmetric(v: 4),
-                    ),
+
+                  16.verticalSpace,
+                  Text(
+                    context.localization.password,
+                    style: Styles.large.regular,
                   ),
+                  4.verticalSpace,
+
+                  TextInput(
+                    errorMessage: context.localization.passwordMustLeast8Char,
+                    controller: _passwordController,
+                    placeholder: context.localization.enterPassword,
+                    icon: SvgPicture.asset(
+                      AppIcons.icLock,
+                      colorFilter: ColorFilter.mode(
+                        AppColors.secondaryText,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    validator: AppValidator.validatePassword,
+                  ),
+
                   20.verticalSpace,
 
                   SizedBox(
@@ -131,7 +159,7 @@ class _SignInPageState extends State<SignInPage> {
                         //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
                         // );
                       },
-                      text: context.localization.signIn,
+                      text: context.localization.signUp,
                     ),
                   ),
                 ],
@@ -139,70 +167,27 @@ class _SignInPageState extends State<SignInPage> {
             ),
             Positioned(
               bottom: AppDimensions.insetBottom(context) + 16,
-              left: 16,
-              right: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 1,
-                        decoration: BoxDecoration(color: AppColors.contentText),
+              left: 0,
+              right: 0,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: '${context.localization.haveAccount} ',
+                  style: Styles.normal.regular,
+                  children: [
+                    TextSpan(
+                      text: context.localization.signIn,
+                      style: Styles.normal.regular.copyWith(
+                        color: AppColors.primary,
+                        decoration: TextDecoration.underline,
                       ),
-                      Text(
-                        context.localization.ortherLogin,
-                        style: Styles.medium.regular.copyWith(
-                          color: AppColors.contentText,
-                        ),
-                      ).paddingSymmetric(h: 8),
-                      Container(
-                        width: 60,
-                        height: 1,
-                        decoration: BoxDecoration(color: AppColors.contentText),
-                      ),
-                    ],
-                  ),
-                  12.verticalSpace,
-                  OutlineButton(
-                    widget: Stack(
-                      children: [
-                        Positioned(
-                          left: 12,
-                          top: 0,
-                          bottom: 0,
-                          child: SvgPicture.asset(AppIcons.icGoogle),
-                        ),
-                        Center(child: Text(context.localization.googleLogin)),
-                      ],
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          NavigationHelper.goBack();
+                        },
                     ),
-                    onPress: () {},
-                  ),
-                  24.verticalSpace,
-                  RichText(
-                    text: TextSpan(
-                      text: '${context.localization.dontHaveAccount} ',
-                      style: Styles.normal.regular,
-                      children: [
-                        TextSpan(
-                          text: context.localization.signUp,
-                          style: Styles.normal.regular.copyWith(
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              NavigationHelper.navigate(
-                                '${AppRoutes.moduleAuth}${AuthModuleRoutes.signUp}',
-                              );
-                            },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
