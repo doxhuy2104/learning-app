@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:learning_app/core/components/app_annotated_region.dart';
+import 'package:learning_app/core/constants/app_colors.dart';
+import 'package:learning_app/core/constants/app_icons.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
+import 'package:learning_app/core/extensions/localized_extension.dart';
+import 'package:learning_app/modules/account/presentation/pages/account_page.dart';
 import 'package:learning_app/modules/app/app_module.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
+import 'package:learning_app/modules/app/presentation/components/title_navigation_bar/navigation_bar.dart';
+import 'package:learning_app/modules/app/presentation/components/title_navigation_bar/navigation_bar_item.dart';
+import 'package:learning_app/modules/home/presentation/pages/home_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 class MainPage extends StatefulWidget {
@@ -33,7 +40,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [];
+    return [HomePage(), AccountPage(), HomePage(), AccountPage()];
   }
 
   void navigatePageView(int value) {
@@ -66,7 +73,7 @@ class _MainPageState extends State<MainPage> {
           pageSnapping: true,
           controller: _pageController,
           preloadPagesCount: 2,
-          physics: const NeverScrollableScrollPhysics(),
+          // physics: const NeverScrollableScrollPhysics(),
           children: _pageViews(),
           onPageChanged: (value) {
             setState(() {
@@ -87,13 +94,44 @@ class _MainPageState extends State<MainPage> {
               case 3:
                 route = 'AiStylists';
                 break;
-              case 4:
-                route = 'Account';
-                break;
+              // case 4:
+              //   route = 'Account';
+              //   break;
             }
           },
         ),
         extendBody: true,
+        bottomNavigationBar: TitledBottomNavigationBar(
+          onTap: (value) {
+            navigatePageView(value);
+          },
+          inactiveColor: Colors.white,
+          activeColor: AppColors.primary,
+          indicatorColor: Colors.transparent,
+          currentIndex: _currentIndex,
+          items: [
+            TitledNavigationBarItem(
+              iconPath: AppIcons.icHomeInactive,
+              activeIconPath: AppIcons.icHomeActive,
+              title: context.localization.home,
+            ),
+            TitledNavigationBarItem(
+              iconPath: AppIcons.icAccountInactive,
+              activeIconPath: AppIcons.icAccountActive,
+              title: context.localization.account,
+            ),
+            TitledNavigationBarItem(
+              iconPath: AppIcons.icAccountInactive,
+              activeIconPath: AppIcons.icAccountActive,
+              title: context.localization.account,
+            ),
+            TitledNavigationBarItem(
+              iconPath: AppIcons.icAccountInactive,
+              activeIconPath: AppIcons.icAccountActive,
+              title: context.localization.account,
+            ),
+          ],
+        ),
       ),
     );
   }

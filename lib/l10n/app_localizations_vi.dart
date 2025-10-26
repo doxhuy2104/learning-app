@@ -45,7 +45,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get enterPassword => 'Nhập mật khẩu';
 
   @override
+  String get enterConfirmPassword => 'Nhập mật khẩu xác nhận';
+
+  @override
+  String get confirmPasswordError => 'Mật khẩu không khớp, vui lòng nhập lại!';
+
+  @override
   String get forgotPassword => 'Quên mật khẩu?';
+
+  @override
+  String get forgotPasswordT => 'Quên mật khẩu';
 
   @override
   String get invalidEmail => 'Email không hợp lệ';
@@ -58,4 +67,34 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get googleLogin => 'Đăng nhập bằng Google';
+
+  @override
+  String get home => 'Trang chủ';
+
+  @override
+  String get account => 'Tài khoản';
+
+  @override
+  String get lessons => 'Bài học';
+
+  @override
+  String get practice => 'Luyện tập';
+
+  @override
+  String get close => 'Đóng';
+
+  @override
+  String get emailInUse => 'Email đã được sử dụng';
+
+  @override
+  String get success => 'Thành công';
+
+  @override
+  String get invalidEmailOrPassword => 'Email hoặc mật khẩu không hợp lệ';
+
+  @override
+  String get register_success => 'Đăng ký thành công';
+
+  @override
+  String get errorTitle => 'Thất bại';
 }

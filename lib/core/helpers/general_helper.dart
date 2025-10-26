@@ -1,7 +1,10 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_udid/flutter_udid.dart';
 import 'package:learning_app/core/constants/app_configs.dart';
 import 'package:learning_app/core/utils/globals.dart';
 import 'package:learning_app/core/utils/utils.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class GeneralHelper {
   static var appName = '';
@@ -20,43 +23,43 @@ class GeneralHelper {
   GeneralHelper._();
 
   static init() async {
-    // final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-    // appName = packageInfo.appName;
-    // packageName = packageInfo.packageName;
-    // appVersion = packageInfo.version;
-    // buildNumber = packageInfo.buildNumber;
-    // osInfo = defaultTargetPlatform.name;
-    // deviceLanguageCode = PlatformDispatcher.instance.locale.languageCode;
+    appName = packageInfo.appName;
+    packageName = packageInfo.packageName;
+    appVersion = packageInfo.version;
+    buildNumber = packageInfo.buildNumber;
+    osInfo = defaultTargetPlatform.name;
+    deviceLanguageCode = PlatformDispatcher.instance.locale.languageCode;
 
-    // final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-    // if (defaultTargetPlatform == TargetPlatform.android) {
-    //   final androidInfo = await deviceInfoPlugin.androidInfo;
-    //   isEmulator = !androidInfo.isPhysicalDevice;
-    //   deviceInfo = androidInfo.brand;
-    //   osVersion = androidInfo.version.release;
-    //   deviceModel = androidInfo.model;
-    //   deviceId = androidInfo.id;
-    //   final uuid = await FlutterUdid.udid;
-    //   Globals.globalUuid = uuid;
-    //   deviceId = uuid;
-      
-    //   // final uuid = Utils.generateUUIDFromAndroidID(deviceId);
-    //   // Globals.globalUuid = uuid;
-    // } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-    //   final iosInfo = await deviceInfoPlugin.iosInfo;
-    //   isEmulator = !iosInfo.isPhysicalDevice;
-    //   deviceInfo = iosInfo.model;
-    //   osVersion = iosInfo.systemVersion;
-    //   deviceModel = iosInfo.utsname.machine;
-    //   deviceId = iosInfo.identifierForVendor ?? '';
-    //   final uuid = await FlutterUdid.udid;
-    //   deviceId = uuid;
-  
-    //   Globals.globalUuid = uuid;
-    // } else {
-    //   isEmulator = false;
-    // }
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      isEmulator = !androidInfo.isPhysicalDevice;
+      deviceInfo = androidInfo.brand;
+      osVersion = androidInfo.version.release;
+      deviceModel = androidInfo.model;
+      deviceId = androidInfo.id;
+      final uuid = await FlutterUdid.udid;
+      Globals.globalUuid = uuid;
+      deviceId = uuid;
+
+      // final uuid = Utils.generateUUIDFromAndroidID(deviceId);
+      // Globals.globalUuid = uuid;
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      final iosInfo = await deviceInfoPlugin.iosInfo;
+      isEmulator = !iosInfo.isPhysicalDevice;
+      deviceInfo = iosInfo.model;
+      osVersion = iosInfo.systemVersion;
+      deviceModel = iosInfo.utsname.machine;
+      deviceId = iosInfo.identifierForVendor ?? '';
+      final uuid = await FlutterUdid.udid;
+      deviceId = uuid;
+
+      Globals.globalUuid = uuid;
+    } else {
+      isEmulator = false;
+    }
 
     appFlavor = kDebugMode ? AppConfigs.flavorDev : AppConfigs.flavorProd;
 

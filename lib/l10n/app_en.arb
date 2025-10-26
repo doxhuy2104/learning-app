@@ -14,9 +14,24 @@
   "ortherLogin":"Or login with",
   "enterEmail":"Enter email address",
   "enterPassword":"Enter password",
+  "enterConfirmPassword":"Enter confirm password",
+  "confirmPasswordError": "Passwords do not match, please enter again!",
   "forgotPassword":"Forgot password?",
+  "forgotPasswordT":"Forgot password",
   "invalidEmail":"Invalid email",
   "passwordMustLeast8Char":"Password must be at least 8 characters",
   "sendEmail":"Send email",
-  "googleLogin":"Login with Google"
+  "googleLogin":"Login with Google",
+  "home":"Home",
+  "account":"Account",
+  "lessons":"Lessons",
+  "practice":"Practice",
+  "close":"Close",
+  "emailInUse": "Email already in use",
+  "success": "Success",
+  "invalidEmailOrPassword": "Invalid email or password",
+  "register_success": "Registration successful",
+  "errorTitle": "Failed"
+
+
 }

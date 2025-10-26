@@ -170,11 +170,29 @@ abstract class AppLocalizations {
   /// **'Enter password'**
   String get enterPassword;
 
+  /// No description provided for @enterConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter confirm password'**
+  String get enterConfirmPassword;
+
+  /// No description provided for @confirmPasswordError.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match, please enter again!'**
+  String get confirmPasswordError;
+
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:
   /// **'Forgot password?'**
   String get forgotPassword;
+
+  /// No description provided for @forgotPasswordT.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password'**
+  String get forgotPasswordT;
 
   /// No description provided for @invalidEmail.
   ///
@@ -199,6 +217,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login with Google'**
   String get googleLogin;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @lessons.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons'**
+  String get lessons;
+
+  /// No description provided for @practice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get practice;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @emailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Email already in use'**
+  String get emailInUse;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @invalidEmailOrPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get invalidEmailOrPassword;
+
+  /// No description provided for @register_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful'**
+  String get register_success;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get errorTitle;
 }
 
 class _AppLocalizationsDelegate

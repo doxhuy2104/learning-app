@@ -1,27 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:learning_app/core/components/app_annotated_region.dart';
+import 'package:learning_app/core/components/app_dialog.dart';
+import 'package:learning_app/core/components/app_indicator.dart';
 import 'package:learning_app/core/components/buttons/outline_button.dart';
 import 'package:learning_app/core/components/buttons/primary_button.dart';
 import 'package:learning_app/core/components/inputs/text_input.dart';
 import 'package:learning_app/core/constants/app_colors.dart';
 import 'package:learning_app/core/constants/app_dimensions.dart';
 import 'package:learning_app/core/constants/app_icons.dart';
+import 'package:learning_app/core/constants/app_images.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/constants/app_styles.dart';
 import 'package:learning_app/core/constants/app_validator.dart';
 import 'package:learning_app/core/extensions/localized_extension.dart';
 import 'package:learning_app/core/extensions/num_extension.dart';
 import 'package:learning_app/core/extensions/widget_extension.dart';
+import 'package:learning_app/core/helpers/auth_helper.dart';
 import 'package:learning_app/core/helpers/navigation_helper.dart';
 import 'package:learning_app/core/helpers/shared_preference_helper.dart';
-import 'package:learning_app/modules/app/general/app_module_routes.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
+import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
-import 'package:learning_app/modules/auth/presentation/blocs/auth_bloc.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -31,15 +33,19 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
   final sharedPreferenceHelper = Modular.get<SharedPreferenceHelper>();
 
   @override
   void dispose() {
-    final _emailController = TextEditingController();
-    final _passwordController = TextEditingController();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -47,12 +53,14 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return AppAnnotatedRegion(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         // appBar: AppBar(
         //   title: Text(context.localization.signIn, style: Styles.h3.smb),
         // ),
         body: Stack(
           children: [
+            Image.asset(AppImages.imgLogo),
             Positioned(
               top: AppDimensions.insetTop(context),
               left: 16,
@@ -60,83 +68,144 @@ class _SignInPageState extends State<SignInPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(context.localization.email, style: Styles.large.regular),
-                  4.verticalSpace,
-                  TextInput(
-                    errorMessage: context.localization.invalidEmail,
-                    controller: _emailController,
-                    placeholder: context.localization.enterEmail,
-                    icon: SvgPicture.asset(
-                      AppIcons.icEmail,
-                      colorFilter: ColorFilter.mode(
-                        AppColors.secondaryText,
-                        BlendMode.srcIn,
-                      ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.localization.email,
+                      style: Styles.large.regular,
                     ),
-                    validator: AppValidator.validateEmail,
-                  ),
+                    4.verticalSpace,
+                    TextInput(
+                      formKey: _formKey,
 
-                  16.verticalSpace,
-                  Text(
-                    context.localization.password,
-                    style: Styles.large.regular,
-                  ),
-                  4.verticalSpace,
-
-                  TextInput(
-                    errorMessage: context.localization.passwordMustLeast8Char,
-                    controller: _passwordController,
-                    placeholder: context.localization.enterPassword,
-                    icon: SvgPicture.asset(
-                      AppIcons.icLock,
-                      colorFilter: ColorFilter.mode(
-                        AppColors.secondaryText,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    validator: AppValidator.validatePassword,
-                  ),
-                  4.verticalSpace,
-                  Container(
-                    width: double.infinity,
-                    alignment: AlignmentGeometry.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationHelper.push(
-                          '${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}',
-                        );
-                      },
-                      child: Text(
-                        context.localization.forgotPassword,
-                        style: Styles.medium.regular.copyWith(
-                          color: AppColors.contentText,
+                      errorMessage: context.localization.invalidEmail,
+                      controller: _emailController,
+                      focusNode: _emailFocusNode,
+                      placeholder: context.localization.enterEmail,
+                      icon: SvgPicture.asset(
+                        AppIcons.icEmail,
+                        colorFilter: ColorFilter.mode(
+                          AppColors.secondaryText,
+                          BlendMode.srcIn,
                         ),
-                      ).paddingSymmetric(v: 4),
+                      ),
+                      validator: AppValidator.validateEmail,
+                      textInputAction: TextInputAction.next,
+                      nextFocusNode: _passwordFocusNode,
                     ),
-                  ),
-                  20.verticalSpace,
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: PrimaryButton(
-                      onPress: () async {
-                        final username = _usernameController.text;
-                        if (username.isNotEmpty) {}
-                        await Future.delayed(Duration(milliseconds: 500));
-                        // NavigationHelper.replace(
-                        //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                        // );
-                      },
-                      text: context.localization.signIn,
+                    16.verticalSpace,
+                    Text(
+                      context.localization.password,
+                      style: Styles.large.regular,
                     ),
-                  ),
-                ],
+                    4.verticalSpace,
+
+                    TextInput(
+                      formKey: _formKey,
+
+                      errorMessage: context.localization.passwordMustLeast8Char,
+                      controller: _passwordController,
+                      focusNode: _passwordFocusNode,
+                      placeholder: context.localization.enterPassword,
+                      icon: SvgPicture.asset(
+                        AppIcons.icLock,
+                        colorFilter: ColorFilter.mode(
+                          AppColors.secondaryText,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      validator: AppValidator.validatePassword,
+                      isSecure: true,
+                      textInputAction: TextInputAction.done,
+                    ),
+                    8.verticalSpace,
+                    Container(
+                      width: double.infinity,
+                      alignment: AlignmentGeometry.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          NavigationHelper.push(
+                            '${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}',
+                          );
+                        },
+                        child: Text(
+                          context.localization.forgotPassword,
+                          style: Styles.medium.regular.copyWith(
+                            color: AppColors.contentText,
+                          ),
+                        ).paddingSymmetric(v: 4),
+                      ),
+                    ),
+                    16.verticalSpace,
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: PrimaryButton(
+                        onPress: () async {
+                          final process = _formKey.currentState?.validate();
+                          if (process!) {
+                            try {
+                              AppIndicator.show();
+                              final rt = await AuthHelper.signInWithPassword(
+                                emailAddress: _emailController.text,
+                                password: _passwordController.text,
+                              );
+
+                              String? token;
+                              if (rt?.user != null) {
+                                Utils.debugLog(
+                                  'Login email idToken:${token = await rt?.user?.getIdToken()}',
+                                );
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              Utils.debugLogError(e.code);
+                              // switch case show e.code: sign-in
+                              switch (e.code) {
+                                case 'invalid-credential':
+                                  AppDialog.show(
+                                    title: context
+                                        .localization
+                                        .invalidEmailOrPassword,
+                                    // message: '',
+                                    type: AppDialogType.failed,
+                                  );
+                                  break;
+                                // case 'account-exists-with-different-credential':
+                                //   AppDialog.show(
+                                //     title: '',
+                                //     message: '',
+                                //     type: AppDialogType.failed,
+                                //     confirmText: '',
+                                //   );
+                                //   break;
+                                default:
+                                  AppDialog.show(
+                                    title: context.localization.errorTitle,
+                                    message: e.code,
+                                    type: AppDialogType.failed,
+                                  );
+                                  break;
+                              }
+                            } catch (e) {
+                              Utils.debugLogError(e);
+                            } finally {
+                              AppIndicator.hide();
+                            }
+                          }
+                        },
+                        text: context.localization.signIn,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+
             Positioned(
               bottom: AppDimensions.insetBottom(context) + 16,
               left: 16,
@@ -178,7 +247,29 @@ class _SignInPageState extends State<SignInPage> {
                         Center(child: Text(context.localization.googleLogin)),
                       ],
                     ),
-                    onPress: () {},
+                    onPress: () async {
+                      try {
+                        AppIndicator.show();
+                        final rt = await AuthHelper.signInWithGoogle();
+                        String? token;
+                        if (rt.user != null) {
+                          Utils.debugLogSuccess(
+                            'Login google. idToken: ${token = await rt.user?.getIdToken()}',
+                          );
+
+                          // _authBloc.add(
+                          //   AuthLoginRequested(
+                          //     idToken: token!,
+                          //     type: 'GOOGLE',
+                          //   ),
+                          // );
+                        }
+                      } catch (e) {
+                        Utils.debugLogError(e);
+                      } finally {
+                        AppIndicator.hide();
+                      }
+                    },
                   ),
                   24.verticalSpace,
                   RichText(

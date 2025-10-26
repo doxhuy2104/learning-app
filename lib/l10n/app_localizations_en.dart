@@ -45,7 +45,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterPassword => 'Enter password';
 
   @override
+  String get enterConfirmPassword => 'Enter confirm password';
+
+  @override
+  String get confirmPasswordError =>
+      'Passwords do not match, please enter again!';
+
+  @override
   String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get forgotPasswordT => 'Forgot password';
 
   @override
   String get invalidEmail => 'Invalid email';
@@ -58,4 +68,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get googleLogin => 'Login with Google';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get lessons => 'Lessons';
+
+  @override
+  String get practice => 'Practice';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get emailInUse => 'Email already in use';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get invalidEmailOrPassword => 'Invalid email or password';
+
+  @override
+  String get register_success => 'Registration successful';
+
+  @override
+  String get errorTitle => 'Failed';
 }
