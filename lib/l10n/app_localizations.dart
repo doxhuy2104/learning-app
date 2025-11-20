@@ -277,6 +277,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed'**
   String get errorTitle;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get fullName;
+
+  /// No description provided for @enterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter full name'**
+  String get enterName;
+
+  /// No description provided for @invalidName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter name'**
+  String get invalidName;
 }
 
 class _AppLocalizationsDelegate

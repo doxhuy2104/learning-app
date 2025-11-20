@@ -97,4 +97,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get errorTitle => 'Thất bại';
+
+  @override
+  String get fullName => 'Họ và tên';
+
+  @override
+  String get enterName => 'Nhập họ và tên';
+
+  @override
+  String get invalidName => 'Vui lòng nhập tên';
 }

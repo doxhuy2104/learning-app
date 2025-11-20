@@ -2,7 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:learning_app/modules/app/data/datasources/app_api.dart';
 import 'package:learning_app/modules/app/data/repositories/app_repository.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
+import 'package:learning_app/modules/app/presentation/bloc/app_bloc.dart';
 import 'package:learning_app/modules/app/presentation/pages/main_page.dart';
 
 class AppModule extends Module {

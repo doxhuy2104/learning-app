@@ -22,8 +22,8 @@ import 'package:learning_app/core/helpers/navigation_helper.dart';
 import 'package:learning_app/core/helpers/shared_preference_helper.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
-import 'package:learning_app/modules/auth/presentation/blocs/auth_bloc.dart';
+import 'package:learning_app/modules/app/presentation/bloc/app_bloc.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_bloc.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -46,12 +46,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       // appBar: AppBar(title: Text(con, style: Styles.h3.smb)),
       body: Stack(
         children: [
-          Image.asset(AppImages.imgLogo),
-
+          // Image.asset(AppImages.imgLogo),
           Positioned(
             top: AppDimensions.insetTop(context),
             left: 8,

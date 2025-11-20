@@ -31,7 +31,9 @@
   "success": "Success",
   "invalidEmailOrPassword": "Invalid email or password",
   "register_success": "Registration successful",
-  "errorTitle": "Failed"
-
+  "errorTitle": "Failed",
+  "fullName":"Full name",
+  "enterName":"Enter full name",
+  "invalidName":"Please enter name"
 
 }

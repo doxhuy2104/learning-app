@@ -54,6 +54,10 @@ dependencies:
   package_info_plus: ^9.0.0
   device_info_plus: ^12.2.0
   flutter_udid: ^4.0.0
+  jwt_decoder: ^2.0.1
+  cached_network_image: ^3.4.1
+  flutter_tex: ^5.1.10
+  flutter_math_fork: ^0.7.4
 
 dev_dependencies:
   flutter_test:

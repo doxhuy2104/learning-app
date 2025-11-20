@@ -24,6 +24,8 @@ import 'package:learning_app/core/helpers/navigation_helper.dart';
 import 'package:learning_app/core/helpers/shared_preference_helper.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_event.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -39,6 +41,7 @@ class _SignInPageState extends State<SignInPage> {
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final sharedPreferenceHelper = Modular.get<SharedPreferenceHelper>();
+  final _authBloc = Modular.get<AuthBloc>();
 
   @override
   void dispose() {
@@ -60,7 +63,7 @@ class _SignInPageState extends State<SignInPage> {
         // ),
         body: Stack(
           children: [
-            Image.asset(AppImages.imgLogo),
+            // Image.asset(AppImages.imgLogo),
             Positioned(
               top: AppDimensions.insetTop(context),
               left: 16,
@@ -81,7 +84,6 @@ class _SignInPageState extends State<SignInPage> {
                     4.verticalSpace,
                     TextInput(
                       formKey: _formKey,
-
                       errorMessage: context.localization.invalidEmail,
                       controller: _emailController,
                       focusNode: _emailFocusNode,
@@ -162,6 +164,12 @@ class _SignInPageState extends State<SignInPage> {
                                   'Login email idToken:${token = await rt?.user?.getIdToken()}',
                                 );
                               }
+                              _authBloc.add(
+                                SignInRequest(
+                                  idToken: token ?? '',
+                                  type: 'email',
+                                ),
+                              );
                             } on FirebaseAuthException catch (e) {
                               Utils.debugLogError(e.code);
                               // switch case show e.code: sign-in
@@ -257,12 +265,9 @@ class _SignInPageState extends State<SignInPage> {
                             'Login google. idToken: ${token = await rt.user?.getIdToken()}',
                           );
 
-                          // _authBloc.add(
-                          //   AuthLoginRequested(
-                          //     idToken: token!,
-                          //     type: 'GOOGLE',
-                          //   ),
-                          // );
+                          _authBloc.add(
+                            SignInRequest(idToken: token!, type: 'GOOGLE'),
+                          );
                         }
                       } catch (e) {
                         Utils.debugLogError(e);

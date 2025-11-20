@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:learning_app/core/constants/app_environment.dart';
 import 'package:learning_app/core/helpers/general_helper.dart';
+import 'package:learning_app/core/utils/utils.dart';
 
 class AuthHelper {
   static final GoogleSignIn _signIn = GoogleSignIn.instance;
@@ -75,6 +76,7 @@ class AuthHelper {
           password: password,
         );
 
+    Utils.debugLog('Registered idToken:${await credential.user?.getIdToken()}');
     // if (!credential.user!.emailVerified && sendVerifyEmail) {
     //   credential.user!.sendEmailVerification(
     //     ActionCodeSettings(

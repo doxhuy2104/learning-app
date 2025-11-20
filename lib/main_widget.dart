@@ -1,17 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:learning_app/core/constants/app_keys.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
+import 'package:learning_app/core/constants/app_stores.dart';
 import 'package:learning_app/core/constants/app_theme.dart';
 import 'package:learning_app/core/helpers/general_helper.dart';
+import 'package:learning_app/core/helpers/shared_preference_helper.dart';
+import 'package:learning_app/core/utils/globals.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/l10n/app_localizations.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_state.dart';
+import 'package:learning_app/modules/app/presentation/bloc/app_bloc.dart';
+import 'package:learning_app/modules/app/presentation/bloc/app_state.dart';
 import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_event.dart';
 
 class MainWidget extends StatefulWidget {
   const MainWidget({super.key});
@@ -22,16 +29,49 @@ class MainWidget extends StatefulWidget {
 
 class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
   bool _firstLoad = false;
-
+  final sharedPreferenceHelper = Modular.get<SharedPreferenceHelper>();
+  final _authBloc = Modular.get<AuthBloc>();
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
 
     /* always open splash first */
-    Modular.setInitialRoute(
-      '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
-    );
+    final accessToken = sharedPreferenceHelper.get(key: AppStores.kAccessToken);
+    if (accessToken != null) {
+      Modular.setInitialRoute('${AppRoutes.moduleApp}${AppModuleRoutes.main}');
+
+      if (FirebaseAuth.instance.currentUser != null) {
+        // check if accessToken is not exp
+        String? accessToken = Globals.globalAccessToken;
+
+        if (JwtDecoder.isExpired(accessToken as String)) {
+          Utils.debugLogSuccess('Access token is expired');
+          FirebaseAuth.instance.currentUser?.getIdToken().then((idToken) {
+            Utils.debugLogSuccess('Relogin $idToken');
+            _authBloc.add(
+              SignInRequest(
+                idToken: idToken!,
+                type: _authBloc.state.user?.loginType,
+              ),
+            );
+          });
+        } else {
+          Utils.debugLogSuccess('Access token is not expired $accessToken');
+          // _authBloc.add(GetDetailUserRequested());
+        }
+      } else {
+        /* emit logout */
+        // _authBloc.add(AuthLogoutRequested());
+      }
+    } else {
+      Modular.setInitialRoute(
+        '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
+      );
+    }
+    // Modular.setInitialRoute(
+    //   '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
+    // );
     Modular.setNavigatorKey(AppKeys.navigatorKey);
   }
 

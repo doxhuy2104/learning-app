@@ -32,6 +32,8 @@
   "success": "Thành công",
   "invalidEmailOrPassword": "Email hoặc mật khẩu không hợp lệ",
   "register_success": "Đăng ký thành công",
-  "errorTitle": "Thất bại"
-
+  "errorTitle": "Thất bại",
+  "fullName":"Họ và tên",
+  "enterName":"Nhập họ và tên",
+  "invalidName":"Vui lòng nhập tên"
 }

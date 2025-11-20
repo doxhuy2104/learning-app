@@ -1,7 +1,7 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:learning_app/modules/app/data/repositories/app_repository.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_event.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_state.dart';
+import 'package:learning_app/modules/app/presentation/bloc/app_event.dart';
+import 'package:learning_app/modules/app/presentation/bloc/app_state.dart';
 
 class AppBloc extends HydratedBloc<AppEvent, AppState> {
   final AppRepository repository;

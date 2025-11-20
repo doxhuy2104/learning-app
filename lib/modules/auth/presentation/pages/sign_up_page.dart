@@ -3,19 +3,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:learning_app/core/components/app_annotated_region.dart';
 import 'package:learning_app/core/components/app_dialog.dart';
 import 'package:learning_app/core/components/app_indicator.dart';
 import 'package:learning_app/core/components/buttons/button.dart';
-import 'package:learning_app/core/components/buttons/outline_button.dart';
 import 'package:learning_app/core/components/buttons/primary_button.dart';
 import 'package:learning_app/core/components/inputs/text_input.dart';
 import 'package:learning_app/core/constants/app_colors.dart';
 import 'package:learning_app/core/constants/app_dimensions.dart';
 import 'package:learning_app/core/constants/app_icons.dart';
-import 'package:learning_app/core/constants/app_images.dart';
-import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/constants/app_styles.dart';
 import 'package:learning_app/core/constants/app_validator.dart';
 import 'package:learning_app/core/extensions/localized_extension.dart';
@@ -25,10 +21,8 @@ import 'package:learning_app/core/helpers/auth_helper.dart';
 import 'package:learning_app/core/helpers/navigation_helper.dart';
 import 'package:learning_app/core/helpers/shared_preference_helper.dart';
 import 'package:learning_app/core/utils/utils.dart';
-import 'package:learning_app/modules/app/general/app_module_routes.dart';
-import 'package:learning_app/modules/app/presentation/blocs/app_bloc.dart';
-import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
-import 'package:learning_app/modules/auth/presentation/blocs/auth_bloc.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:learning_app/modules/auth/presentation/bloc/auth_event.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -38,21 +32,27 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final sharedPreferenceHelper = Modular.get<SharedPreferenceHelper>();
+  final _nameFocusNode = FocusNode();
+
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  final _authBloc = Modular.get<AuthBloc>();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _nameFocusNode.dispose();
+
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
@@ -70,8 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
         // ),
         body: Stack(
           children: [
-            Image.asset(AppImages.imgLogo),
-
+            // Image.asset(AppImages.imgLogo),
             Positioned(
               top: AppDimensions.insetTop(context),
               left: 8,
@@ -99,171 +98,219 @@ class _SignUpPageState extends State<SignUpPage> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.localization.email,
-                      style: Styles.large.regular,
-                    ),
-                    4.verticalSpace,
-                    TextInput(
-                      formKey: _formKey,
-                      errorMessage: context.localization.invalidEmail,
-                      controller: _emailController,
-                      placeholder: context.localization.enterEmail,
-                      icon: SvgPicture.asset(
-                        AppIcons.icEmail,
-                        colorFilter: ColorFilter.mode(
-                          AppColors.secondaryText,
-                          BlendMode.srcIn,
-                        ),
+            Positioned(
+              left: 0,
+              right: 0,
+              top: AppDimensions.insetTop(context) + 60,
+              bottom: AppDimensions.keyboardHeight(context),
+              // duration: Duration(milliseconds: 300),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.localization.fullName,
+                        style: Styles.large.regular,
                       ),
-                      validator: AppValidator.validateEmail,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _emailFocusNode,
-                      nextFocusNode: _passwordFocusNode,
-                    ),
-
-                    16.verticalSpace,
-                    Text(
-                      context.localization.password,
-                      style: Styles.large.regular,
-                    ),
-                    4.verticalSpace,
-
-                    TextInput(
-                      formKey: _formKey,
-                      errorMessage: context.localization.passwordMustLeast8Char,
-                      controller: _passwordController,
-                      placeholder: context.localization.enterPassword,
-                      icon: SvgPicture.asset(
-                        AppIcons.icLock,
-                        colorFilter: ColorFilter.mode(
-                          AppColors.secondaryText,
-                          BlendMode.srcIn,
+                      4.verticalSpace,
+                      TextInput(
+                        formKey: _formKey,
+                        errorMessage: context.localization.invalidName,
+                        controller: _nameController,
+                        placeholder: context.localization.enterName,
+                        icon: SvgPicture.asset(
+                          AppIcons.icEmail,
+                          colorFilter: ColorFilter.mode(
+                            AppColors.secondaryText,
+                            BlendMode.srcIn,
+                          ),
                         ),
+                        validator: (value) {
+                          return value.isNotEmpty;
+                        },
+                        textInputAction: TextInputAction.next,
+                        focusNode: _nameFocusNode,
+                        nextFocusNode: _emailFocusNode,
                       ),
-                      validator: AppValidator.validatePassword,
-                      isSecure: true,
-                      focusNode: _passwordFocusNode,
-                      nextFocusNode: _confirmPasswordFocusNode,
-                      textInputAction: TextInputAction.next,
-                    ),
+                      16.verticalSpace,
 
-                    16.verticalSpace,
-                    Text(
-                      context.localization.confirmPassword,
-                      style: Styles.large.regular,
-                    ),
-                    4.verticalSpace,
-
-                    TextInput(
-                      formKey: _formKey,
-                      errorMessage: context.localization.confirmPasswordError,
-                      controller: _confirmPasswordController,
-                      placeholder: context.localization.enterConfirmPassword,
-                      icon: SvgPicture.asset(
-                        AppIcons.icLock,
-                        colorFilter: ColorFilter.mode(
-                          AppColors.secondaryText,
-                          BlendMode.srcIn,
+                      Text(
+                        context.localization.email,
+                        style: Styles.large.regular,
+                      ),
+                      4.verticalSpace,
+                      TextInput(
+                        formKey: _formKey,
+                        errorMessage: context.localization.invalidEmail,
+                        controller: _emailController,
+                        placeholder: context.localization.enterEmail,
+                        icon: SvgPicture.asset(
+                          AppIcons.icEmail,
+                          colorFilter: ColorFilter.mode(
+                            AppColors.secondaryText,
+                            BlendMode.srcIn,
+                          ),
                         ),
+                        validator: AppValidator.validateEmail,
+                        textInputAction: TextInputAction.next,
+                        focusNode: _emailFocusNode,
+                        nextFocusNode: _passwordFocusNode,
                       ),
-                      validator: (value) => _passwordController.text == value,
-                      isSecure: true,
-                      focusNode: _confirmPasswordFocusNode,
-                      textInputAction: TextInputAction.done,
-                    ),
 
-                    20.verticalSpace,
+                      16.verticalSpace,
+                      Text(
+                        context.localization.password,
+                        style: Styles.large.regular,
+                      ),
+                      4.verticalSpace,
 
-                    SizedBox(
-                      width: double.infinity,
-                      child: PrimaryButton(
-                        onPress: () async {
-                          final process = _formKey.currentState?.validate();
+                      TextInput(
+                        formKey: _formKey,
+                        errorMessage:
+                            context.localization.passwordMustLeast8Char,
+                        controller: _passwordController,
+                        placeholder: context.localization.enterPassword,
+                        icon: SvgPicture.asset(
+                          AppIcons.icLock,
+                          colorFilter: ColorFilter.mode(
+                            AppColors.secondaryText,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        validator: AppValidator.validatePassword,
+                        isSecure: true,
+                        focusNode: _passwordFocusNode,
+                        nextFocusNode: _confirmPasswordFocusNode,
+                        textInputAction: TextInputAction.next,
+                      ),
 
-                          if (process!) {
-                            AppIndicator.show();
+                      16.verticalSpace,
+                      Text(
+                        context.localization.confirmPassword,
+                        style: Styles.large.regular,
+                      ),
+                      4.verticalSpace,
 
-                            try {
-                              final rt = await AuthHelper.registerWithPassword(
-                                emailAddress: _emailController.text,
-                                password: _passwordController.text,
-                              );
-                              if (rt?.user != null) {
-                                Utils.debugLog(
-                                  'Register success rt:${rt?.user?.email}',
-                                );
+                      TextInput(
+                        formKey: _formKey,
+                        errorMessage: context.localization.confirmPasswordError,
+                        controller: _confirmPasswordController,
+                        placeholder: context.localization.enterConfirmPassword,
+                        icon: SvgPicture.asset(
+                          AppIcons.icLock,
+                          colorFilter: ColorFilter.mode(
+                            AppColors.secondaryText,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        validator: (value) => _passwordController.text == value,
+                        isSecure: true,
+                        focusNode: _confirmPasswordFocusNode,
+                        textInputAction: TextInputAction.done,
+                      ),
 
-                                if (mounted) {
-                                  AppDialog.show(
-                                    dismissible: false,
-                                    title:
-                                        context.localization.register_success,
-                                    // message: '',
-                                    type: AppDialogType.success,
-                                    confirmText: context.localization.signIn,
-                                    onConfirm: () {
-                                      NavigationHelper.replace(
-                                        '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
-                                      );
-                                    },
+                      20.verticalSpace,
+
+                      SizedBox(
+                        width: double.infinity,
+                        child: PrimaryButton(
+                          onPress: () async {
+                            final process = _formKey.currentState?.validate();
+
+                            if (process!) {
+                              AppIndicator.show();
+
+                              try {
+                                final rt =
+                                    await AuthHelper.registerWithPassword(
+                                      emailAddress: _emailController.text,
+                                      password: _passwordController.text,
+                                    );
+                                String? token;
+                                if (rt?.user != null) {
+                                  Utils.debugLog(
+                                    'Login email idToken:${token = await rt?.user?.getIdToken()}',
                                   );
                                 }
-                              }
-                            } on FirebaseAuthException catch (e) {
-                              Utils.debugLogError(e.code);
-
-                              switch (e.code) {
-                                case 'email-already-in-use':
-                                  AppDialog.show(
-                                    title: context.localization.emailInUse,
-                                    // message: '',
-                                    type: AppDialogType.failed,
-                                  );
-                                  break;
-                                // case 'weak-password':
-                                //   AppDialog.show(
-                                //     title: '',
-                                //     message: '',
-                                //     type: AppDialogType.failed,
-                                //     confirmText: '',
+                                _authBloc.add(
+                                  SignUpRequest(
+                                    idToken: token ?? '',
+                                    name: _nameController.text,
+                                  ),
+                                );
+                                // if (rt?.user != null) {
+                                //   Utils.debugLog(
+                                //     'Register success rt:${rt?.user?.email}',
                                 //   );
-                                //   break;
-                                default:
-                                  AppDialog.show(
-                                    title: context.localization.errorTitle,
-                                    message: e.code,
-                                    type: AppDialogType.failed,
-                                  );
-                                  break;
+
+                                //   if (mounted) {
+                                //     AppDialog.show(
+                                //       dismissible: false,
+                                //       title:
+                                //           context.localization.register_success,
+                                //       // message: '',
+                                //       type: AppDialogType.success,
+                                //       confirmText: context.localization.signIn,
+                                //       onConfirm: () {
+                                //         NavigationHelper.replace(
+                                //           '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
+                                //         );
+                                //       },
+                                //     );
+                                //   }
+                                // }
+                              } on FirebaseAuthException catch (e) {
+                                Utils.debugLogError(e.code);
+
+                                switch (e.code) {
+                                  case 'email-already-in-use':
+                                    AppDialog.show(
+                                      title: context.localization.emailInUse,
+                                      // message: '',
+                                      type: AppDialogType.failed,
+                                    );
+                                    break;
+                                  // case 'weak-password':
+                                  //   AppDialog.show(
+                                  //     title: '',
+                                  //     message: '',
+                                  //     type: AppDialogType.failed,
+                                  //     confirmText: '',
+                                  //   );
+                                  //   break;
+                                  default:
+                                    AppDialog.show(
+                                      title: context.localization.errorTitle,
+                                      message: e.code,
+                                      type: AppDialogType.failed,
+                                    );
+                                    break;
+                                }
+                              } catch (e) {
+                                Utils.debugLogError(e);
+                                AppDialog.show(
+                                  title: context.localization.errorTitle,
+                                  message: e.toString(),
+                                  type: AppDialogType.failed,
+                                );
+                              } finally {
+                                AppIndicator.hide();
                               }
-                            } catch (e) {
-                              Utils.debugLogError(e);
-                              AppDialog.show(
-                                title: context.localization.errorTitle,
-                                message: e.toString(),
-                                type: AppDialogType.failed,
-                              );
-                            } finally {
-                              AppIndicator.hide();
                             }
-                          }
-                        },
-                        text: context.localization.signUp,
+                          },
+                          text: context.localization.signUp,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
+
             Positioned(
               bottom: AppDimensions.insetBottom(context) + 16,
               left: 0,

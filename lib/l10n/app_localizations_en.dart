@@ -98,4 +98,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorTitle => 'Failed';
+
+  @override
+  String get fullName => 'Full name';
+
+  @override
+  String get enterName => 'Enter full name';
+
+  @override
+  String get invalidName => 'Please enter name';
 }
