@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:learning_app/core/components/app_annotated_region.dart';
 import 'package:learning_app/core/constants/app_colors.dart';
@@ -7,10 +6,11 @@ import 'package:learning_app/core/constants/app_icons.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/extensions/localized_extension.dart';
 import 'package:learning_app/modules/account/presentation/pages/account_page.dart';
-import 'package:learning_app/modules/app/app_module.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
 import 'package:learning_app/modules/app/presentation/components/title_navigation_bar/navigation_bar.dart';
 import 'package:learning_app/modules/app/presentation/components/title_navigation_bar/navigation_bar_item.dart';
+import 'package:learning_app/modules/practice/presentation/pages/practice_page.dart';
+import 'package:learning_app/modules/exam/presentation/pages/exam_page.dart';
 import 'package:learning_app/modules/home/presentation/pages/home_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
@@ -40,18 +40,16 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [HomePage(), AccountPage(), HomePage(), AccountPage()];
+    return [HomePage(), PracticePage(), ExamPage(), AccountPage()];
   }
 
   void navigatePageView(int value) {
     _pageController.jumpToPage(value);
   }
 
-  @override
   String get routePath => '${AppRoutes.moduleApp}${AppModuleRoutes.main}';
 
-  @override
-  onFocus() {
+  void onFocus() {
     final args = Modular.args;
     if (args.data != null) {
       int? index = args.data['tabIndex'] is int
@@ -79,25 +77,6 @@ class _MainPageState extends State<MainPage> {
             setState(() {
               _currentIndex = value;
             });
-
-            String route = '';
-            switch (value) {
-              case 0:
-                route = 'Explore';
-                break;
-              case 1:
-                route = 'Feed';
-                break;
-              case 2:
-                route = 'AiTools';
-                break;
-              case 3:
-                route = 'AiStylists';
-                break;
-              // case 4:
-              //   route = 'Account';
-              //   break;
-            }
           },
         ),
         extendBody: true,
@@ -116,14 +95,14 @@ class _MainPageState extends State<MainPage> {
               title: context.localization.home,
             ),
             TitledNavigationBarItem(
-              iconPath: AppIcons.icAccountInactive,
-              activeIconPath: AppIcons.icAccountActive,
-              title: context.localization.account,
+              iconPath: AppIcons.icBook,
+              activeIconPath: AppIcons.icBookActive,
+              title: context.localization.practice,
             ),
             TitledNavigationBarItem(
-              iconPath: AppIcons.icAccountInactive,
-              activeIconPath: AppIcons.icAccountActive,
-              title: context.localization.account,
+              iconPath: AppIcons.icText,
+              activeIconPath: AppIcons.icText,
+              title: context.localization.exam,
             ),
             TitledNavigationBarItem(
               iconPath: AppIcons.icAccountInactive,

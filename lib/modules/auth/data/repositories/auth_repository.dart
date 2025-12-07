@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:learning_app/core/models/user_model.dart';
 import 'package:learning_app/core/network/dio_exceptions.dart';
 import 'package:learning_app/core/network/dio_failure.dart';
-import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/auth/data/datasources/auth_api.dart';
 
 class AuthRepository {

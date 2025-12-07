@@ -230,17 +230,17 @@ abstract class AppLocalizations {
   /// **'Account'**
   String get account;
 
-  /// No description provided for @lessons.
-  ///
-  /// In en, this message translates to:
-  /// **'Lessons'**
-  String get lessons;
-
   /// No description provided for @practice.
   ///
   /// In en, this message translates to:
   /// **'Practice'**
   String get practice;
+
+  /// No description provided for @exam.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam'**
+  String get exam;
 
   /// No description provided for @close.
   ///
@@ -295,6 +295,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter name'**
   String get invalidName;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logout;
+
+  /// No description provided for @confirmLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm log out'**
+  String get confirmLogout;
+
+  /// No description provided for @confirmLogoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get confirmLogoutMessage;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @accountInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Account infomation'**
+  String get accountInfo;
+
+  /// No description provided for @groupSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Group selection'**
+  String get groupSelection;
+
+  /// No description provided for @selectBlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Select block'**
+  String get selectBlock;
+
+  /// No description provided for @selectGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Select group'**
+  String get selectGroup;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate

@@ -75,10 +75,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get account => 'Tài khoản';
 
   @override
-  String get lessons => 'Bài học';
+  String get practice => 'Luyện tập';
 
   @override
-  String get practice => 'Luyện tập';
+  String get exam => 'Đề thi';
 
   @override
   String get close => 'Đóng';
@@ -106,4 +106,31 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get invalidName => 'Vui lòng nhập tên';
+
+  @override
+  String get logout => 'Đăng xuất';
+
+  @override
+  String get confirmLogout => 'Xác nhận đăng xuất';
+
+  @override
+  String get confirmLogoutMessage => 'Bạn có chắc chắn muốn đăng xuất?';
+
+  @override
+  String get cancel => 'Huỷ';
+
+  @override
+  String get accountInfo => 'Thông tin tài khoản';
+
+  @override
+  String get groupSelection => 'Chọn tổ hợp';
+
+  @override
+  String get selectBlock => 'Chọn khối';
+
+  @override
+  String get selectGroup => 'Chọn tổ hợp';
+
+  @override
+  String get save => 'Lưu';
 }

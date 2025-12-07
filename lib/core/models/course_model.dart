@@ -1,67 +1,71 @@
 import 'package:equatable/equatable.dart';
+import 'package:learning_app/core/models/lesson_model.dart';
 
 class CourseModel extends Equatable {
-  final String? courseId;
+  final int? id;
   final String? title;
-  final String? description;
   final String? url;
   final bool? isExam;
-
+  final List<LessonModel>? lessons;
   const CourseModel({
-    this.courseId,
+    this.id,
     this.title,
-    this.description,
     this.url,
     this.isExam,
+    this.lessons,
   });
 
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final String? courseId = mapData['courseId'];
+    final int? id = mapData['id'];
     final String? title = mapData['title'];
-    final String? description = mapData['description'];
     final String? url = mapData['url'];
     final bool? isExam = mapData['isExam'];
+    final List<LessonModel>? lessons = (mapData['lessons'] as List<dynamic>?)
+        ?.map(
+          (e) => LessonModel.fromJson(e as Map<String, dynamic>) as LessonModel,
+        )
+        .toList();
 
     return CourseModel(
-      courseId: courseId,
+      id: id,
       title: title,
-      description: description,
       url: url,
       isExam: isExam,
+      lessons: lessons,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'courseId': courseId,
+    'id': id,
     'title': title,
-    'description': description,
     'url': url,
     'isExam': isExam,
+    'lessons': lessons?.map((e) => e.toJson()).toList(),
   };
 
   CourseModel copyWith({
-    String? courseId,
+    int? id,
     String? title,
-    String? description,
     String? url,
     bool? isExam,
+    List<LessonModel>? lessons,
   }) {
     return CourseModel(
-      courseId: courseId ?? this.courseId,
+      id: id ?? this.id,
       title: title ?? this.title,
-      description: description ?? this.description,
       url: url ?? this.url,
       isExam: isExam ?? this.isExam,
+      lessons: lessons ?? this.lessons,
     );
   }
 
   @override
-  List<Object?> get props => [courseId];
+  List<Object?> get props => [id];
 
   @override
   String toString() {
-    return 'Course: id:$courseId, title: $title, description: $description, url: $url, isExam: $isExam';
+    return 'Course: id:$id, title: $title, url: $url, isExam: $isExam, lessons: ${lessons?.length ?? 0}';
   }
 }

@@ -24,8 +24,8 @@
   "googleLogin":"Login with Google",
   "home":"Home",
   "account":"Account",
-  "lessons":"Lessons",
   "practice":"Practice",
+  "exam":"Exam",
   "close":"Close",
   "emailInUse": "Email already in use",
   "success": "Success",
@@ -34,6 +34,17 @@
   "errorTitle": "Failed",
   "fullName":"Full name",
   "enterName":"Enter full name",
-  "invalidName":"Please enter name"
+  "invalidName":"Please enter name",
+  "logout":"Log out",
+  "confirmLogout":"Confirm log out",
+  "confirmLogoutMessage":"Are you sure you want to log out?",
+  "cancel":"Cancel",
+  "accountInfo":"Account infomation",
+  "groupSelection":"Group selection",
+  "selectBlock":"Select block",
+  "selectGroup":"Select group",
+  "save":"Save"
+
+
 
 }

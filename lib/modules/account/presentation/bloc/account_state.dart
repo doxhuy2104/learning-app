@@ -1,10 +1,23 @@
-part of 'account_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:learning_app/core/models/user_model.dart';
+import 'package:learning_app/core/utils/utils.dart';
 
-sealed class AccountState extends Equatable {
-  const AccountState();
-  
+final class AccountState extends Equatable {
+  final UserModel? user;
+
+  const AccountState._({this.user});
+
   @override
-  List<Object> get props => [];
-}
+  List<Object?> get props => [user.hashCode];
 
-final class AccountInitial extends AccountState {}
+  const AccountState.initial() : this._();
+  AccountState setState({UserModel? user}) {
+    Utils.debugLog(user);
+    return AccountState._(user: user ?? this.user);
+  }
+
+  AccountState.fromJson(Map<String, dynamic> json)
+    : user = UserModel.fromJson(json['user']);
+
+  Map<String, dynamic> toJson() => {'user': user?.toJson()};
+}

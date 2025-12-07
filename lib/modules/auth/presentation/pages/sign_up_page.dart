@@ -136,8 +136,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         focusNode: _nameFocusNode,
                         nextFocusNode: _emailFocusNode,
                       ),
-                      16.verticalSpace,
-
                       Text(
                         context.localization.email,
                         style: Styles.large.regular,

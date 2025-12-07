@@ -1,4 +1,5 @@
-part of 'exam_bloc.dart';
+
+import 'package:equatable/equatable.dart';
 
 sealed class ExamEvent extends Equatable {
   const ExamEvent();
@@ -6,3 +7,4 @@ sealed class ExamEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+ class GetExams extends ExamEvent{}

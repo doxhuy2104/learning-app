@@ -25,8 +25,8 @@
   "googleLogin":"Đăng nhập bằng Google",
   "home":"Trang chủ",
   "account":"Tài khoản",
-  "lessons":"Bài học",
   "practice":"Luyện tập",
+  "exam":"Đề thi",
   "close":"Đóng",
   "emailInUse": "Email đã được sử dụng",
   "success": "Thành công",
@@ -35,5 +35,14 @@
   "errorTitle": "Thất bại",
   "fullName":"Họ và tên",
   "enterName":"Nhập họ và tên",
-  "invalidName":"Vui lòng nhập tên"
+  "invalidName":"Vui lòng nhập tên",
+  "logout":"Đăng xuất",
+  "confirmLogout":"Xác nhận đăng xuất",
+  "confirmLogoutMessage":"Bạn có chắc chắn muốn đăng xuất?",
+  "cancel":"Huỷ",
+  "accountInfo":"Thông tin tài khoản",
+  "groupSelection":"Chọn tổ hợp",
+  "selectBlock":"Chọn khối",
+  "selectGroup":"Chọn tổ hợp",
+  "save":"Lưu"
 }

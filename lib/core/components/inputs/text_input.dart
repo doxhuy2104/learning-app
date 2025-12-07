@@ -22,6 +22,7 @@ class TextInput extends StatefulWidget {
   final GlobalKey<FormState>? formKey;
   final TextInputAction? textInputAction;
   final FocusNode? nextFocusNode;
+  final bool disable;
   const TextInput({
     super.key,
     this.keyboardType,
@@ -37,6 +38,7 @@ class TextInput extends StatefulWidget {
     this.formKey,
     this.textInputAction,
     this.nextFocusNode,
+    this.disable = false,
   });
 
   @override

@@ -7,6 +7,7 @@ class PrimaryButton extends StatelessWidget {
   final String? text;
   final void Function() onPress;
   final bool disabled;
+  final Widget? widget;
 
   const PrimaryButton({
     super.key,
@@ -14,6 +15,7 @@ class PrimaryButton extends StatelessWidget {
     this.text,
     required this.onPress,
     this.disabled = false,
+    this.widget,
   });
 
   @override
@@ -27,20 +29,27 @@ class PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(44)),
             color: AppColors.primary,
           ),
-          child: TextButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-            ),
-            onPressed: disabled ? null : onPress,
-            child: Text(
-              text!,
-              style: Styles.large.regular.copyWith(
-                color: disabled
-                    ? Colors.white.withValues(alpha: 0.7)
-                    : Colors.white,
-              ),
-            ),
-          ),
+          child: widget != null
+              ? InkWell(
+                  borderRadius: BorderRadius.circular(44),
+
+                  onTap: disabled ? null : onPress,
+                  child: widget,
+                )
+              : TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  ),
+                  onPressed: disabled ? null : onPress,
+                  child: Text(
+                    text!,
+                    style: Styles.large.regular.copyWith(
+                      color: disabled
+                          ? Colors.white.withValues(alpha: 0.7)
+                          : Colors.white,
+                    ),
+                  ),
+                ),
         ),
         if (disabled) ...[
           Container(

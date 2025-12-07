@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:learning_app/core/models/group_model.dart';
 
 class UserModel extends Equatable {
   final int? userId;
@@ -7,6 +8,7 @@ class UserModel extends Equatable {
   final String? accessToken;
   final String? email;
   final String? loginType;
+  final GroupModel? group;
 
   const UserModel({
     this.userId,
@@ -15,6 +17,7 @@ class UserModel extends Equatable {
     this.accessToken,
     this.email,
     this.loginType,
+    this.group,
   });
 
   static fromJson(Map<String, dynamic>? mapData) {
@@ -26,6 +29,9 @@ class UserModel extends Equatable {
     final String? accessToken = mapData['accessToken'];
     final String? email = mapData['email'];
     final String? loginType = mapData['loginType'];
+    final GroupModel? group = GroupModel.fromJson(
+      mapData['group'] as Map<String, dynamic>?,
+    );
 
     return UserModel(
       userId: userId,
@@ -34,6 +40,7 @@ class UserModel extends Equatable {
       accessToken: accessToken,
       email: email,
       loginType: loginType,
+      group: group,
     );
   }
 
@@ -44,6 +51,7 @@ class UserModel extends Equatable {
     'accessToken': accessToken,
     'email': email,
     'loginType': loginType,
+    'group': group?.toJson(),
   };
 
   UserModel copyWith({
@@ -53,6 +61,7 @@ class UserModel extends Equatable {
     String? accessToken,
     String? email,
     String? loginType,
+    GroupModel? group,
   }) {
     return UserModel(
       userId: userId ?? this.userId,
@@ -60,15 +69,24 @@ class UserModel extends Equatable {
       fullName: fullName ?? this.fullName,
       accessToken: accessToken ?? this.accessToken,
       email: email ?? this.email,
-      loginType: loginType ?? loginType,
+      loginType: loginType ?? this.loginType,
+      group: group ?? this.group,
     );
   }
 
   @override
-  List<Object?> get props => [userId];
+  List<Object?> get props => [
+    userId,
+    avatar,
+    fullName,
+    accessToken,
+    email,
+    loginType,
+    group,
+  ];
 
   @override
   String toString() {
-    return 'User: id:$userId, avatar: $avatar, fullName: $fullName, accessToken: $accessToken, email: $email, loginType:$loginType';
+    return 'User: id:$userId, avatar: $avatar, fullName: $fullName, accessToken: $accessToken, email: $email, loginType:$loginType, group:$group';
   }
 }

@@ -7,6 +7,8 @@ import 'package:learning_app/core/network/dio_client.dart';
 import 'package:learning_app/modules/account/account_module.dart';
 import 'package:learning_app/modules/app/app_module.dart';
 import 'package:learning_app/modules/auth/auth_module.dart';
+import 'package:learning_app/modules/practice/practice_module.dart';
+import 'package:learning_app/modules/exam/exam_module.dart';
 import 'package:learning_app/modules/home/home_module.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,18 +33,24 @@ class MainModule extends Module {
   }
 
   @override
-  List<Module> get imports => [AppModule(), AuthModule()];
+  List<Module> get imports => [
+    AppModule(),
+    HomeModule(),
+    AccountModule(),
+    AuthModule(),
+    PracticeModule(),
+    ExamModule(),
+  ];
 
   @override
   void routes(RouteManager r) {
     super.routes(r);
     r.module(AppRoutes.moduleApp, module: AppModule());
     r.module(AppRoutes.moduleAuth, module: AuthModule());
-        r.module(AppRoutes.moduleHome, module: HomeModule());
+    r.module(AppRoutes.moduleHome, module: HomeModule());
 
-    // r.module(AppRoutes.moduleLessons, module: AuthModule());
-    r.module(AppRoutes.modulePractice, module: AuthModule());
+    r.module(AppRoutes.modulePractice, module: PracticeModule());
+    r.module(AppRoutes.moduleExam, module: ExamModule());
     r.module(AppRoutes.moduleAccount, module: AccountModule());
-
   }
 }

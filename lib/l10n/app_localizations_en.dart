@@ -76,10 +76,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get account => 'Account';
 
   @override
-  String get lessons => 'Lessons';
+  String get practice => 'Practice';
 
   @override
-  String get practice => 'Practice';
+  String get exam => 'Exam';
 
   @override
   String get close => 'Close';
@@ -107,4 +107,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalidName => 'Please enter name';
+
+  @override
+  String get logout => 'Log out';
+
+  @override
+  String get confirmLogout => 'Confirm log out';
+
+  @override
+  String get confirmLogoutMessage => 'Are you sure you want to log out?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get accountInfo => 'Account infomation';
+
+  @override
+  String get groupSelection => 'Group selection';
+
+  @override
+  String get selectBlock => 'Select block';
+
+  @override
+  String get selectGroup => 'Select group';
+
+  @override
+  String get save => 'Save';
 }

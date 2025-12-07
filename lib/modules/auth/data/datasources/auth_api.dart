@@ -5,7 +5,8 @@ class AuthApi {
   final dioClient = Utils.dioClient;
   Future<Response> loginByIdToken({
     required String idToken,
-    String? type,  }) async {
+    String? type,
+  }) async {
     const String url = '/auth/login';
     final params = {"idToken": idToken, "type": type};
 
@@ -21,9 +22,10 @@ class AuthApi {
     }
   }
 
-   Future<Response> signUp({
+  Future<Response> signUp({
     required String idToken,
-     required String name,  }) async {
+    required String name,
+  }) async {
     const String url = '/auth/register';
     final params = {"idToken": idToken, "fullName": name};
 

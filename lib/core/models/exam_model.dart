@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 class ExamModel extends Equatable {
-  final String? examId;
-  final String? lessonId;
-  final String? courseId;
+  final int? id;
+  final int? lessonId;
+  final int? courseId;
   final String? title;
   final String? url;
   final int? orderIndex;
 
   const ExamModel({
-    this.examId,
+    this.id,
     this.lessonId,
     this.courseId,
     this.title,
@@ -20,15 +20,15 @@ class ExamModel extends Equatable {
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final String? examId = mapData['examId'];
-    final String? lessonId = mapData['lessonId'];
-    final String? courseId = mapData['courseId'];
+    final int? id = mapData['id'];
+    final int? lessonId = mapData['lessonId'];
+    final int? courseId = mapData['courseId'];
     final String? title = mapData['title'];
     final String? url = mapData['url'];
     final int? orderIndex = mapData['orderIndex'];
 
     return ExamModel(
-      examId: examId,
+      id: id,
       lessonId: lessonId,
       courseId: courseId,
       title: title,
@@ -38,7 +38,7 @@ class ExamModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'examId': examId,
+    'id': id,
     'lessonId': lessonId,
     'courseId': courseId,
     'title': title,
@@ -47,15 +47,15 @@ class ExamModel extends Equatable {
   };
 
   ExamModel copyWith({
-    String? examId,
-    String? lessonId,
-    String? courseId,
+    int? id,
+    int? lessonId,
+    int? courseId,
     String? title,
     String? url,
     int? orderIndex,
   }) {
     return ExamModel(
-      examId: examId ?? this.examId,
+      id: id ?? this.id,
       lessonId: lessonId ?? this.lessonId,
       courseId: courseId ?? this.courseId,
       title: title ?? this.title,
@@ -65,10 +65,10 @@ class ExamModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [examId];
+  List<Object?> get props => [id];
 
   @override
   String toString() {
-    return 'Exam: id:$examId, lessonId: $lessonId, courseId: $courseId, title: $title, url: $url, orderIndex: $orderIndex';
+    return 'Exam: id:$id, lessonId: $lessonId, courseId: $courseId, title: $title, url: $url, orderIndex: $orderIndex';
   }
 }

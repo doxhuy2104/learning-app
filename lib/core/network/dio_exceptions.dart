@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 // import 'package:ai_image_gen_app_flutter/core/extensions/localized_extension.dart';
 import 'package:learning_app/core/constants/app_keys.dart';
+import 'package:learning_app/core/extensions/localized_extension.dart';
 
 class DioExceptions implements Exception {
   late String message;
@@ -13,8 +14,8 @@ class DioExceptions implements Exception {
     if (reason != null) {
       message = reason;
     } else {
-      // message =
-      //     AppKeys.navigatorKey.currentContext!.localization.pleaseTryAgain;
+      message =
+          'Please try again';
     }
   }
 

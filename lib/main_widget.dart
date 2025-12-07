@@ -13,9 +13,9 @@ import 'package:learning_app/core/helpers/shared_preference_helper.dart';
 import 'package:learning_app/core/utils/globals.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/l10n/app_localizations.dart';
+import 'package:learning_app/modules/account/presentation/bloc/account_bloc.dart';
+import 'package:learning_app/modules/account/presentation/bloc/account_event.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
-import 'package:learning_app/modules/app/presentation/bloc/app_bloc.dart';
-import 'package:learning_app/modules/app/presentation/bloc/app_state.dart';
 import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
 import 'package:learning_app/modules/auth/presentation/bloc/auth_bloc.dart';
 import 'package:learning_app/modules/auth/presentation/bloc/auth_event.dart';
@@ -49,16 +49,16 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
           Utils.debugLogSuccess('Access token is expired');
           FirebaseAuth.instance.currentUser?.getIdToken().then((idToken) {
             Utils.debugLogSuccess('Relogin $idToken');
-            _authBloc.add(
-              SignInRequest(
-                idToken: idToken!,
-                type: _authBloc.state.user?.loginType,
-              ),
-            );
+            // Get login type from account if available, otherwise use default
+            final accountBloc = Modular.get<AccountBloc>();
+            final loginType = accountBloc.state.user?.loginType;
+            _authBloc.add(SignInRequest(idToken: idToken!, type: loginType));
           });
         } else {
           Utils.debugLogSuccess('Access token is not expired $accessToken');
-          // _authBloc.add(GetDetailUserRequested());
+          // Load account info if token is valid
+          final accountBloc = Modular.get<AccountBloc>();
+          accountBloc.add(GetAccountInfo());
         }
       } else {
         /* emit logout */

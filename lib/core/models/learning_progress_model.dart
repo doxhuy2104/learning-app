@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 class LearningProgressModel extends Equatable {
-  final String? progressId;
-  final String? userId;
-  final String? lessonId;
+  final int? id;
+  final int? userId;
+  final int? lessonId;
   final String? status; // not_started, in_progress, completed, skipped
   final DateTime? startTime;
   final DateTime? completionTime;
@@ -11,7 +11,7 @@ class LearningProgressModel extends Equatable {
   final double? completionPercentage;
 
   const LearningProgressModel({
-    this.progressId,
+    this.id,
     this.userId,
     this.lessonId,
     this.status,
@@ -24,9 +24,9 @@ class LearningProgressModel extends Equatable {
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final String? progressId = mapData['progressId'];
-    final String? userId = mapData['userId'];
-    final String? lessonId = mapData['lessonId'];
+    final int? id = mapData['id'];
+    final int? userId = mapData['userId'];
+    final int? lessonId = mapData['lessonId'];
     final String? status = mapData['status'];
     final DateTime? startTime = mapData['startTime'] != null
         ? DateTime.tryParse(mapData['startTime'].toString())
@@ -40,7 +40,7 @@ class LearningProgressModel extends Equatable {
         : null;
 
     return LearningProgressModel(
-      progressId: progressId,
+      id: id,
       userId: userId,
       lessonId: lessonId,
       status: status,
@@ -52,7 +52,7 @@ class LearningProgressModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'progressId': progressId,
+    'id': id,
     'userId': userId,
     'lessonId': lessonId,
     'status': status,
@@ -63,9 +63,9 @@ class LearningProgressModel extends Equatable {
   };
 
   LearningProgressModel copyWith({
-    String? progressId,
-    String? userId,
-    String? lessonId,
+    int? id,
+    int? userId,
+    int? lessonId,
     String? status,
     DateTime? startTime,
     DateTime? completionTime,
@@ -73,7 +73,7 @@ class LearningProgressModel extends Equatable {
     double? completionPercentage,
   }) {
     return LearningProgressModel(
-      progressId: progressId ?? this.progressId,
+      id: id ?? this.id,
       userId: userId ?? this.userId,
       lessonId: lessonId ?? this.lessonId,
       status: status ?? this.status,
@@ -85,10 +85,10 @@ class LearningProgressModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [progressId];
+  List<Object?> get props => [id];
 
   @override
   String toString() {
-    return 'LearningProgress: id:$progressId, userId: $userId, lessonId: $lessonId, status: $status, timeSpentMinutes: $timeSpentMinutes, completionPercentage: $completionPercentage';
+    return 'LearningProgress: id:$id, userId: $userId, lessonId: $lessonId, status: $status, timeSpentMinutes: $timeSpentMinutes, completionPercentage: $completionPercentage';
   }
 }

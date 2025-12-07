@@ -1,20 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:learning_app/core/utils/utils.dart';
 
-class CourseApi {
+class HomeApi {
   final dioClient = Utils.dioClient;
-  Future<Response> getCourses() async {
-    const String url = '/auth/login';
+  Future<Response> getSubjects() async {
+    const String url = '/subject';
 
     try {
-      final response = await dioClient.post(
+      final response = await dioClient.get(
         url,
-        options: Options(extra: {"noAuth": true}),
       );
       return response;
     } catch (e) {
       rethrow;
     }
   }
-
 }

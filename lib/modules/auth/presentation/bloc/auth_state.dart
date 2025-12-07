@@ -1,27 +1,29 @@
 import 'package:equatable/equatable.dart';
-import 'package:learning_app/core/models/user_model.dart';
 
 final class AuthState extends Equatable {
-  final UserModel? user;
   final String? email;
+  final String? accessToken;
 
-  const AuthState._({this.user, this.email});
+  const AuthState._({this.email, this.accessToken});
 
   @override
-  List<Object?> get props => [user.hashCode, email.hashCode];
+  List<Object?> get props => [email, accessToken];
 
   const AuthState.initial() : this._();
   AuthState reset() {
-    return AuthState._(email: email);
+    return const AuthState._();
   }
 
-  AuthState setState({UserModel? user, String? email}) {
-    return AuthState._(user: user ?? this.user, email: email ?? this.email);
+  AuthState setState({String? email, String? accessToken}) {
+    return AuthState._(
+      email: email ?? this.email,
+      accessToken: accessToken ?? this.accessToken,
+    );
   }
 
   AuthState.fromJson(Map<String, dynamic> json)
-    : user = UserModel.fromJson(json['user']),
-      email = json['email'];
+    : email = json['email'],
+      accessToken = json['accessToken'];
 
-  Map<String, dynamic> toJson() => {'user': user?.toJson(), 'email': email};
+  Map<String, dynamic> toJson() => {'email': email, 'accessToken': accessToken};
 }

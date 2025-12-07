@@ -73,15 +73,6 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
   Color? activeColor;
   Duration duration = const Duration(milliseconds: 270);
 
-  double _getIndicatorPosition(int index) {
-    var isLtr = Directionality.of(context) == TextDirection.ltr;
-    if (isLtr) {
-      return lerpDouble(-1.0, 1.0, index / (items.length - 1))!;
-    } else {
-      return lerpDouble(1.0, -1.0, index / (items.length - 1))!;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // int middleIndex = (items.length / 2).floor();
@@ -95,91 +86,37 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
                   : 0));
     return Container(
       height: height,
-      alignment: Alignment.bottomCenter,
       clipBehavior: Clip.none,
-      margin: EdgeInsets.only(bottom: 0, right: 0, left: 0),
-      color: Colors.transparent,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        clipBehavior: Clip.none,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
+        ),
+      ),
+      padding: EdgeInsets.only(right: 6, left: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.max,
+        // fit: StackFit.expand,
+        // alignment: Alignment.center,
         children: [
-          RepaintBoundary(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(0),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                child: Container(
-                  height: height,
-                  clipBehavior: Clip.none,
-                  decoration: BoxDecoration(
-                    color: AppColors.navBg.withValues(alpha: 0.4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 60,
-                        spreadRadius: 60,
-                        offset: Offset(0, 0),
-                        blurStyle: BlurStyle.outer,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(0),
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        width: 1,
-                      ),
+          for (var i = 0; i < items.length; i++)
+            if (true) ...[
+              Expanded(
+                child: InkWell(
+                  onTap: () => _select(i),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 12),
+                    child: _buildItemWidget(
+                      items[i],
+                      i == widget.currentIndex,
+                      showText: true,
+                      iconSize: null,
                     ),
-                  ),
-                  padding: EdgeInsets.only(right: 6, left: 6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    mainAxisSize: MainAxisSize.max,
-                    // fit: StackFit.expand,
-                    // alignment: Alignment.center,
-                    children: [
-                      for (var i = 0; i < items.length; i++)
-                        if (true) ...[
-                          Expanded(
-                            child: InkWell(
-                              onTap: () => _select(i),
-                              child: Container(
-                                padding: EdgeInsets.only(top: 12),
-                                child: _buildItemWidget(
-                                  items[i],
-                                  i == widget.currentIndex,
-                                  showText: true,
-                                  iconSize: null,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ] else ...[
-                          Expanded(child: Container()),
-                        ],
-                    ],
                   ),
                 ),
               ),
-            ),
-          ),
-          // if (items.length % 2 == 1) ...[
-          //   Positioned(
-          //     bottom: 14,
-          //     child: InkWell(
-          //       onTap: () => _select(middleIndex),
-          //       child: Container(
-          //         color: Colors.transparent,
-          //         height: DEFAULT_CENTER_BTN_HEIGHT,
-          //         width: width / items.length,
-          //         child: _buildItemWidget(
-          //           items[middleIndex],
-          //           middleIndex == widget.currentIndex,
-          //           spacing: 0,
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ],
+            ],
         ],
       ),
     );
@@ -207,10 +144,11 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
       );
     }
     return SvgPicture.asset(
-      isSelected ? item.activeIconPath : item.iconPath,
+      item.iconPath,
       fit: BoxFit.contain,
       width: width,
       height: width,
+      color: isSelected ? AppColors.primary : Colors.black,
     );
   }
 
@@ -218,7 +156,9 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
     return Text(
       item.title,
       style: Styles.small.smb.copyWith(
-        color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.7),
+        color: isSelected
+            ? AppColors.primary
+            : Colors.black.withValues(alpha: 0.7),
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
     );

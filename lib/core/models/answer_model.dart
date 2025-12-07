@@ -1,60 +1,67 @@
 import 'package:equatable/equatable.dart';
 
 class AnswerModel extends Equatable {
-  final String? answerId;
-  final String? questionId;
+  final int? id;
+  final int? questionId;
   final int? orderIndex;
   final bool? isCorrect;
+  final String? content;
 
   const AnswerModel({
-    this.answerId,
+    this.id,
     this.questionId,
     this.orderIndex,
     this.isCorrect,
+    this.content
   });
 
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final String? answerId = mapData['answerId'];
-    final String? questionId = mapData['questionId'];
+    final int? id = mapData['id'];
+    final int? questionId = mapData['questionId'];
     final int? orderIndex = mapData['orderIndex'];
     final bool? isCorrect = mapData['isCorrect'];
+    final String? content = mapData['content'];
 
     return AnswerModel(
-      answerId: answerId,
+      id: id,
       questionId: questionId,
       orderIndex: orderIndex,
       isCorrect: isCorrect,
+      content:content
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'answerId': answerId,
+    'id': id,
     'questionId': questionId,
     'orderIndex': orderIndex,
     'isCorrect': isCorrect,
+    'content':content
   };
 
   AnswerModel copyWith({
-    String? answerId,
-    String? questionId,
+    int? id,
+    int? questionId,
     int? orderIndex,
     bool? isCorrect,
+    String? content
   }) {
     return AnswerModel(
-      answerId: answerId ?? this.answerId,
+      id: id ?? this.id,
       questionId: questionId ?? this.questionId,
       orderIndex: orderIndex ?? this.orderIndex,
       isCorrect: isCorrect ?? this.isCorrect,
+      content:content ?? this.content
     );
   }
 
   @override
-  List<Object?> get props => [answerId];
+  List<Object?> get props => [id];
 
   @override
   String toString() {
-    return 'Answer: id:$answerId, questionId: $questionId, orderIndex: $orderIndex, isCorrect: $isCorrect';
+    return 'Answer: id:$id, questionId: $questionId, orderIndex: $orderIndex, isCorrect: $isCorrect, content: $content';
   }
 }

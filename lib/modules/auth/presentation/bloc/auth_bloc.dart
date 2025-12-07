@@ -1,13 +1,15 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:learning_app/core/components/app_indicator.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/constants/app_stores.dart';
 import 'package:learning_app/core/helpers/auth_helper.dart';
 import 'package:learning_app/core/helpers/navigation_helper.dart';
 import 'package:learning_app/core/helpers/shared_preference_helper.dart';
-import 'package:learning_app/core/models/user_model.dart';
 import 'package:learning_app/core/utils/globals.dart';
 import 'package:learning_app/core/utils/utils.dart';
+import 'package:learning_app/modules/account/presentation/bloc/account_bloc.dart';
+import 'package:learning_app/modules/account/presentation/bloc/account_event.dart';
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
 import 'package:learning_app/modules/auth/data/repositories/auth_repository.dart';
 import 'package:learning_app/modules/auth/general/auth_module_routes.dart';
@@ -50,10 +52,17 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
             );
 
             if (event.type == "EMAIL") {
-              emit(state.setState(user: r, email: r.email));
+              emit(state.setState(email: r.email, accessToken: r.accessToken));
             } else {
-              emit(state.setState(user: r));
+              emit(state.setState(accessToken: r.accessToken));
             }
+
+            // Get account info and save to AccountBloc
+            final accountBloc = Modular.get<AccountBloc>();
+            accountBloc.add(GetAccountInfo());
+
+            AppIndicator.hide();
+
             NavigationHelper.reset(
               '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
             );
@@ -88,7 +97,10 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
               value: r.userId.toString(),
             );
 
-            emit(state.setState(user: r, email: r.email));
+            emit(state.setState(email: r.email, accessToken: r.accessToken));
+
+            final accountBloc = Modular.get<AccountBloc>();
+            accountBloc.add(GetAccountInfo());
 
             NavigationHelper.reset(
               '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
@@ -104,6 +116,9 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
           sharedPreferenceHelper.remove(key: AppStores.kUserId);
           sharedPreferenceHelper.remove(key: AppStores.kUserUUID);
           emit(state.reset());
+
+          final accountBloc = Modular.get<AccountBloc>();
+          accountBloc.add(UpdateAccountInfo(null));
 
           AuthHelper.signOut()
               .then((value) {

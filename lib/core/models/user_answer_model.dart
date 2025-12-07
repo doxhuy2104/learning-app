@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 class UserAnswerModel extends Equatable {
-  final String? userAnswerId;
-  final String? userId;
-  final String? examId;
-  final String? questionId;
+  final int? id;
+  final int? userId;
+  final int? examId;
+  final int? questionId;
   final String? userAnswer;
   final bool? isCorrect;
   final int? pointsEarned;
@@ -12,7 +12,7 @@ class UserAnswerModel extends Equatable {
   final DateTime? answeredAt;
 
   const UserAnswerModel({
-    this.userAnswerId,
+    this.id,
     this.userId,
     this.examId,
     this.questionId,
@@ -26,10 +26,10 @@ class UserAnswerModel extends Equatable {
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final String? userAnswerId = mapData['userAnswerId'];
-    final String? userId = mapData['userId'];
-    final String? examId = mapData['examId'];
-    final String? questionId = mapData['questionId'];
+    final int? id = mapData['id'];
+    final int? userId = mapData['userId'];
+    final int? examId = mapData['examId'];
+    final int? questionId = mapData['questionId'];
     final String? userAnswer = mapData['userAnswer'];
     final bool? isCorrect = mapData['isCorrect'];
     final int? pointsEarned = mapData['pointsEarned'];
@@ -39,7 +39,7 @@ class UserAnswerModel extends Equatable {
         : null;
 
     return UserAnswerModel(
-      userAnswerId: userAnswerId,
+      id: id,
       userId: userId,
       examId: examId,
       questionId: questionId,
@@ -52,7 +52,7 @@ class UserAnswerModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'userAnswerId': userAnswerId,
+    'id': id,
     'userId': userId,
     'examId': examId,
     'questionId': questionId,
@@ -64,10 +64,10 @@ class UserAnswerModel extends Equatable {
   };
 
   UserAnswerModel copyWith({
-    String? userAnswerId,
-    String? userId,
-    String? examId,
-    String? questionId,
+    int? id,
+    int? userId,
+    int? examId,
+    int? questionId,
     String? userAnswer,
     bool? isCorrect,
     int? pointsEarned,
@@ -75,7 +75,7 @@ class UserAnswerModel extends Equatable {
     DateTime? answeredAt,
   }) {
     return UserAnswerModel(
-      userAnswerId: userAnswerId ?? this.userAnswerId,
+      id: id ?? this.id,
       userId: userId ?? this.userId,
       examId: examId ?? this.examId,
       questionId: questionId ?? this.questionId,
@@ -88,10 +88,10 @@ class UserAnswerModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [userAnswerId];
+  List<Object?> get props => [id];
 
   @override
   String toString() {
-    return 'UserAnswer: id:$userAnswerId, userId: $userId, examId: $examId, questionId: $questionId, isCorrect: $isCorrect, pointsEarned: $pointsEarned, time: $time';
+    return 'UserAnswer: id:$id, userId: $userId, examId: $examId, questionId: $questionId, isCorrect: $isCorrect, pointsEarned: $pointsEarned, time: $time';
   }
 }

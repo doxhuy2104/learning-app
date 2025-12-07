@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 class ParagraphModel extends Equatable {
-  final String? paragraphId;
-  final String? examId;
+  final int? id;
+  final int? examId;
   final String? title;
   final String? content;
   final String? url;
   final int? orderIndex;
 
   const ParagraphModel({
-    this.paragraphId,
+    this.id,
     this.examId,
     this.title,
     this.content,
@@ -20,15 +20,15 @@ class ParagraphModel extends Equatable {
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final String? paragraphId = mapData['paragraphId'];
-    final String? examId = mapData['examId'];
+    final int? id = mapData['id'];
+    final int? examId = mapData['examId'];
     final String? title = mapData['title'];
     final String? content = mapData['content'];
     final String? url = mapData['url'];
     final int? orderIndex = mapData['orderIndex'];
 
     return ParagraphModel(
-      paragraphId: paragraphId,
+      id: id,
       examId: examId,
       title: title,
       content: content,
@@ -38,7 +38,7 @@ class ParagraphModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'paragraphId': paragraphId,
+    'id': id,
     'examId': examId,
     'title': title,
     'content': content,
@@ -47,15 +47,15 @@ class ParagraphModel extends Equatable {
   };
 
   ParagraphModel copyWith({
-    String? paragraphId,
-    String? examId,
+    int? id,
+    int? examId,
     String? title,
     String? content,
     String? url,
     int? orderIndex,
   }) {
     return ParagraphModel(
-      paragraphId: paragraphId ?? this.paragraphId,
+      id: id ?? this.id,
       examId: examId ?? this.examId,
       title: title ?? this.title,
       content: content ?? this.content,
@@ -65,10 +65,10 @@ class ParagraphModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [paragraphId];
+  List<Object?> get props => [id];
 
   @override
   String toString() {
-    return 'Paragraph: id:$paragraphId, examId: $examId, title: $title, content: $content, url: $url, orderIndex: $orderIndex';
+    return 'Paragraph: id:$id, examId: $examId, title: $title, content: $content, url: $url, orderIndex: $orderIndex';
   }
 }

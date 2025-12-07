@@ -11,6 +11,7 @@ import 'package:learning_app/main_module.dart';
 import 'package:learning_app/main_widget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_tex/flutter_tex.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ void main() async {
   );
   HydratedBloc.storage = storage;
   AuthHelper.init();
+  await TeXRenderingServer.start();
 
   runApp(
     ModularApp(
