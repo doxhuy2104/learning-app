@@ -200,32 +200,32 @@ class _QuestionsPageState extends State<QuestionsPage> {
     _examId = args?['examId'] ?? 0;
     _examTitle = args?['examTitle'];
 
-    _loadQuestions();
+    // _loadQuestions();
   }
 
-  Future<void> _loadQuestions() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+  // Future<void> _loadQuestions() async {
+  //   setState(() {
+  //     _isLoading = true;
+  //     _errorMessage = null;
+  //   });
 
-    final result = await _repository.getQuesttionsByExamId(_examId, 1, 100);
+  //   final result = await _repository.getQuesttionsByExamId(_examId, 1, 100);
 
-    result.fold(
-      (failure) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = failure.reason;
-        });
-      },
-      (questions) {
-        setState(() {
-          _isLoading = false;
-          _questions = questions;
-        });
-      },
-    );
-  }
+  //   result.fold(
+  //     (failure) {
+  //       setState(() {
+  //         _isLoading = false;
+  //         _errorMessage = failure.reason;
+  //       });
+  //     },
+  //     (questions) {
+  //       setState(() {
+  //         _isLoading = false;
+  //         _questions = questions;
+  //       });
+  //     },
+  //   );
+  // }
 
   @override
   void dispose() {
@@ -313,48 +313,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ],
-          ),
-        ),
-      );
-    }
-
-    // Error State
-    if (_errorMessage != null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(_examTitle ?? 'Questions'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-                const SizedBox(height: 16),
-                Text(
-                  'Failed to load questions',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red[700],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _errorMessage!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: _loadQuestions,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
-                ),
-              ],
-            ),
           ),
         ),
       );

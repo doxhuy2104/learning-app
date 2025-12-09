@@ -41,14 +41,14 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
           (r) {
             Utils.debugLogSuccess('Login success user:$r');
             Globals.globalAccessToken = r?.accessToken;
-            Globals.globalUserId = r?.userId.toString();
+            Globals.globalUserId = r?.id.toString();
             sharedPreferenceHelper.set(
               key: AppStores.kAccessToken,
               value: r!.accessToken!,
             );
             sharedPreferenceHelper.set(
               key: AppStores.kUserId,
-              value: r.userId.toString(),
+              value: r.id.toString(),
             );
 
             if (event.type == "EMAIL") {
@@ -87,14 +87,14 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
           (r) {
             Utils.debugLogSuccess('Signup success user:$r');
             Globals.globalAccessToken = r?.accessToken;
-            Globals.globalUserId = r?.userId.toString();
+            Globals.globalUserId = r?.id.toString();
             sharedPreferenceHelper.set(
               key: AppStores.kAccessToken,
               value: r!.accessToken!,
             );
             sharedPreferenceHelper.set(
               key: AppStores.kUserId,
-              value: r.userId.toString(),
+              value: r.id.toString(),
             );
 
             emit(state.setState(email: r.email, accessToken: r.accessToken));

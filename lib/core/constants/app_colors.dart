@@ -16,7 +16,7 @@ class AppColors {
     green: 0,
     blue: 0,
   );
-  static const Color success = Color(0xFF40F492);
+  static const Color success = Color.fromARGB(255, 0, 255, 115);
   static const Color fail = Colors.redAccent;
 
   static const Color primaryHighlight = Color(0xFF8B55F2);

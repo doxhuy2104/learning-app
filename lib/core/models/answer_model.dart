@@ -6,7 +6,7 @@ class AnswerModel extends Equatable {
   final int? orderIndex;
   final bool? isCorrect;
   final String? content;
-
+  
   const AnswerModel({
     this.id,
     this.questionId,

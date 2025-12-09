@@ -8,7 +8,7 @@ class PrimaryButton extends StatelessWidget {
   final void Function() onPress;
   final bool disabled;
   final Widget? widget;
-
+  final Color? color;
   const PrimaryButton({
     super.key,
     this.height,
@@ -16,6 +16,7 @@ class PrimaryButton extends StatelessWidget {
     required this.onPress,
     this.disabled = false,
     this.widget,
+    this.color,
   });
 
   @override
@@ -27,7 +28,7 @@ class PrimaryButton extends StatelessWidget {
           height: height ?? 44,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(44)),
-            color: AppColors.primary,
+            color: color ?? AppColors.primary,
           ),
           child: widget != null
               ? InkWell(

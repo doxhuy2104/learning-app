@@ -43,8 +43,23 @@
   "groupSelection":"Group selection",
   "selectBlock":"Select block",
   "selectGroup":"Select group",
-  "save":"Save"
-
-
-
+  "save":"Save",
+  "examQuestions":"Exam questions",
+  "history":"History",
+  "next":"Next",
+  "previous":"Previous",
+  "submit":"Submit",
+  "exit":"Exit",
+  "exitTitle":"Are you sure you want to exit?",
+  "exitMessage":"Your test progress will not be saved",
+  "submitTitle":"Are you sure you want to submit?",
+ "submitMessage":"The system will automatically score and display the results for you",
+ "submitMessage1":"You still have {count} unanswered questions",
+ "@submitMessage1":{
+  "placeholders":{
+    "count":{
+      "type":"num"
+    }
+  }
+ }
 }

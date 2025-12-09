@@ -92,6 +92,14 @@ class _TitledBottomNavigationBarState extends State<TitledBottomNavigationBar> {
         border: Border(
           top: BorderSide(color: Colors.black.withValues(alpha: 0.1), width: 1),
         ),
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, -1),
+            color: Colors.black12,
+            spreadRadius: 1,
+            blurRadius: 4,
+          ),
+        ],
       ),
       padding: EdgeInsets.only(right: 6, left: 6),
       child: Row(

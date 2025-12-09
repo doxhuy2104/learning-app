@@ -7,6 +7,7 @@ class ExamModel extends Equatable {
   final String? title;
   final String? url;
   final int? orderIndex;
+  final int? duration;
 
   const ExamModel({
     this.id,
@@ -15,6 +16,7 @@ class ExamModel extends Equatable {
     this.title,
     this.url,
     this.orderIndex,
+    this.duration,
   });
 
   static fromJson(Map<String, dynamic>? mapData) {
@@ -26,6 +28,7 @@ class ExamModel extends Equatable {
     final String? title = mapData['title'];
     final String? url = mapData['url'];
     final int? orderIndex = mapData['orderIndex'];
+    final int? duration = mapData['duration'];
 
     return ExamModel(
       id: id,
@@ -34,6 +37,7 @@ class ExamModel extends Equatable {
       title: title,
       url: url,
       orderIndex: orderIndex,
+      duration: duration,
     );
   }
 
@@ -44,6 +48,7 @@ class ExamModel extends Equatable {
     'title': title,
     'url': url,
     'orderIndex': orderIndex,
+    'duration': duration,
   };
 
   ExamModel copyWith({
@@ -53,6 +58,7 @@ class ExamModel extends Equatable {
     String? title,
     String? url,
     int? orderIndex,
+    int? duration,
   }) {
     return ExamModel(
       id: id ?? this.id,
@@ -61,6 +67,7 @@ class ExamModel extends Equatable {
       title: title ?? this.title,
       url: url ?? this.url,
       orderIndex: orderIndex ?? this.orderIndex,
+      duration: duration ?? this.duration,
     );
   }
 
@@ -69,6 +76,6 @@ class ExamModel extends Equatable {
 
   @override
   String toString() {
-    return 'Exam: id:$id, lessonId: $lessonId, courseId: $courseId, title: $title, url: $url, orderIndex: $orderIndex';
+    return 'Exam: id:$id, lessonId: $lessonId, courseId: $courseId, title: $title, url: $url, orderIndex: $orderIndex, duration: $duration';
   }
 }

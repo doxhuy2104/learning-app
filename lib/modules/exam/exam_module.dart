@@ -4,6 +4,7 @@ import 'package:learning_app/modules/exam/data/repositories/exam_repository.dart
 import 'package:learning_app/modules/exam/general/exam_module_routes.dart';
 import 'package:learning_app/modules/exam/presentation/bloc/exam_bloc.dart';
 import 'package:learning_app/modules/app/presentation/pages/exams_page.dart';
+import 'package:learning_app/modules/exam/presentation/pages/exam_questions_page.dart';
 import 'package:learning_app/modules/exam/presentation/pages/subject_exam_page.dart';
 
 class ExamModule extends Module {
@@ -21,6 +22,11 @@ class ExamModule extends Module {
     r.child(
       ExamModuleRoutes.subjectExam,
       child: (context) => SubjectExamPage(),
+    );
+
+    r.child(
+      ExamModuleRoutes.examQuestions,
+      child: (context) => ExamQuestionsPage(),
     );
   }
 }

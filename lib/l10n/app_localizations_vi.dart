@@ -133,4 +133,40 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get save => 'Lưu';
+
+  @override
+  String get examQuestions => 'Đề thi';
+
+  @override
+  String get history => 'Lịch sử';
+
+  @override
+  String get next => 'Câu tiếp theo';
+
+  @override
+  String get previous => 'Câu trước';
+
+  @override
+  String get submit => 'Nộp bài';
+
+  @override
+  String get exit => 'Exit';
+
+  @override
+  String get exitTitle => 'Bạn có chắc muốn thoát?';
+
+  @override
+  String get exitMessage => 'Tiến trình làm bài của bạn sẽ không được lưu';
+
+  @override
+  String get submitTitle => 'Bạn có chắc muốn nộp bài?';
+
+  @override
+  String get submitMessage =>
+      'Hệ thống sẽ tự động chấm điểm và hiển thị kết quả cho bạn';
+
+  @override
+  String submitMessage1(num count) {
+    return 'Bạn vẫn còn $count câu hỏi chưa trả lời';
+  }
 }

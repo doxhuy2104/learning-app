@@ -1,39 +1,37 @@
 import 'package:equatable/equatable.dart';
 import 'package:learning_app/core/models/course_model.dart';
 import 'package:learning_app/core/models/exam_history_model.dart';
+import 'package:learning_app/core/models/question_model.dart';
+import 'package:learning_app/core/models/user_answer_model.dart';
 
 final class ExamState extends Equatable {
   final List<CourseModel> exams;
+  final List<QuestionModel> questions;
+  final Map<int, UserAnswerModel> userAnswers;
   final List<ExamHistoryModel> examHistory;
-  final int weeklyGoal;
-  final int weeklyCompleted;
-  final int monthlyGoal;
-  final int monthlyCompleted;
-
+  final bool isLoading;
   const ExamState._({
     this.exams = const [],
+    this.questions = const [],
     this.examHistory = const [],
-    this.weeklyGoal = 6,
-    this.weeklyCompleted = 4,
-    this.monthlyGoal = 24,
-    this.monthlyCompleted = 18,
+    this.userAnswers = const {},
+    this.isLoading = false,
   });
   const ExamState.initial() : this._();
   ExamState setState({
     List<CourseModel>? exams,
+    List<QuestionModel>? questions,
+
     List<ExamHistoryModel>? examHistory,
-    int? weeklyGoal,
-    int? weeklyCompleted,
-    int? monthlyGoal,
-    int? monthlyCompleted,
+    Map<int, UserAnswerModel>? userAnswers,
+    bool? isLoading,
   }) {
     return ExamState._(
       exams: exams ?? this.exams,
+      questions: questions ?? this.questions,
       examHistory: examHistory ?? this.examHistory,
-      weeklyGoal: weeklyGoal ?? this.weeklyGoal,
-      weeklyCompleted: weeklyCompleted ?? this.weeklyCompleted,
-      monthlyGoal: monthlyGoal ?? this.monthlyGoal,
-      monthlyCompleted: monthlyCompleted ?? this.monthlyCompleted,
+      userAnswers: userAnswers ?? this.userAnswers,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
@@ -44,33 +42,36 @@ final class ExamState extends Equatable {
               .whereType<CourseModel>()
               .toList() ??
           [],
+      questions =
+          (json['questions'] as List<dynamic>?)
+              ?.map((e) => QuestionModel.fromJson(e as Map<String, dynamic>))
+              .whereType<QuestionModel>()
+              .toList() ??
+          [],
       examHistory =
           (json['examHistory'] as List<dynamic>?)
               ?.map((e) => ExamHistoryModel.fromJson(e as Map<String, dynamic>))
               .whereType<ExamHistoryModel>()
               .toList() ??
           [],
-      weeklyGoal = json['weeklyGoal'] ?? 6,
-      weeklyCompleted = json['weeklyCompleted'] ?? 0,
-      monthlyGoal = json['monthlyGoal'] ?? 24,
-      monthlyCompleted = json['monthlyCompleted'] ?? 0;
+      userAnswers = {},
+      isLoading = false;
 
   Map<String, dynamic> toJson() => {
     'exams': exams.map((e) => e.toJson()).toList(),
     'examHistory': examHistory.map((e) => e.toJson()).toList(),
-    'weeklyGoal': weeklyGoal,
-    'weeklyCompleted': weeklyCompleted,
-    'monthlyGoal': monthlyGoal,
-    'monthlyCompleted': monthlyCompleted,
   };
+
+  ExamState reset() {
+    return ExamState._();
+  }
 
   @override
   List<Object> get props => [
     exams.hashCode,
     examHistory.hashCode,
-    weeklyGoal,
-    weeklyCompleted,
-    monthlyGoal,
-    monthlyCompleted,
+    questions.hashCode,
+    userAnswers.hashCode,
+    isLoading,
   ];
 }

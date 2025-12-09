@@ -9,6 +9,7 @@ import 'package:learning_app/core/constants/app_colors.dart';
 import 'package:learning_app/core/constants/app_dimensions.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/constants/app_styles.dart';
+import 'package:learning_app/core/extensions/localized_extension.dart';
 import 'package:learning_app/core/extensions/num_extension.dart';
 import 'package:learning_app/core/extensions/widget_extension.dart';
 import 'package:learning_app/core/helpers/navigation_helper.dart';
@@ -72,9 +73,9 @@ class _ExamPageState extends State<ExamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Đề thi'),
+        title: Text(context.localization.exam),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -181,7 +182,7 @@ class _ExamPageState extends State<ExamPage> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -227,7 +228,7 @@ class _ExamPageState extends State<ExamPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Lịch sử làm bài', style: Styles.h5.smb),
+              Text(context.localization.history, style: Styles.h5.smb),
               if (history.length > 5)
                 TextButton(
                   onPressed: () {
@@ -278,7 +279,7 @@ class _ExamPageState extends State<ExamPage> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -289,11 +290,7 @@ class _ExamPageState extends State<ExamPage> {
           // Navigate to review exam
           NavigationHelper.navigate(
             '${AppRoutes.moduleApp}${AppModuleRoutes.questions}',
-            args: {
-              'examId': item.examId,
-              'examTitle': item.examTitle,
-              'isReview': true,
-            },
+            args: {'examId': item.examId, 'isReview': true, 'examTitle': ''},
           );
         },
         borderRadius: BorderRadius.circular(12),
@@ -316,7 +313,7 @@ class _ExamPageState extends State<ExamPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.examTitle ?? 'Đề thi',
+                      'Đề thi',
                       style: Styles.medium.smb,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -339,15 +336,12 @@ class _ExamPageState extends State<ExamPage> {
                           color: Colors.grey[600],
                         ),
                         4.horizontalSpace,
-                        Text(
-                          _formatTime(item.timeSpentMinutes),
-                          style: Styles.small.secondary,
-                        ),
+                        Text(_formatTime(1), style: Styles.small.secondary),
                       ],
                     ),
                     4.verticalSpace,
                     Text(
-                      _formatDate(item.completedAt),
+                      _formatDate(DateTime.now()),
                       style: Styles.xsmall.secondary,
                     ),
                   ],
@@ -359,7 +353,7 @@ class _ExamPageState extends State<ExamPage> {
                     '${AppRoutes.moduleApp}${AppModuleRoutes.questions}',
                     args: {
                       'examId': item.examId,
-                      'examTitle': item.examTitle,
+                      'examTitle': '',
                       'isReview': true,
                     },
                   );

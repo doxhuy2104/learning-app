@@ -134,4 +134,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get examQuestions => 'Exam questions';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get previous => 'Previous';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get exit => 'Exit';
+
+  @override
+  String get exitTitle => 'Are you sure you want to exit?';
+
+  @override
+  String get exitMessage => 'Your test progress will not be saved';
+
+  @override
+  String get submitTitle => 'Are you sure you want to submit?';
+
+  @override
+  String get submitMessage =>
+      'The system will automatically score and display the results for you';
+
+  @override
+  String submitMessage1(num count) {
+    return 'You still have $count unanswered questions';
+  }
 }

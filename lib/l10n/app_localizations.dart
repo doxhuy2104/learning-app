@@ -349,6 +349,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @examQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Exam questions'**
+  String get examQuestions;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get previous;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @exit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exit;
+
+  /// No description provided for @exitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit?'**
+  String get exitTitle;
+
+  /// No description provided for @exitMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your test progress will not be saved'**
+  String get exitMessage;
+
+  /// No description provided for @submitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to submit?'**
+  String get submitTitle;
+
+  /// No description provided for @submitMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The system will automatically score and display the results for you'**
+  String get submitMessage;
+
+  /// No description provided for @submitMessage1.
+  ///
+  /// In en, this message translates to:
+  /// **'You still have {count} unanswered questions'**
+  String submitMessage1(num count);
 }
 
 class _AppLocalizationsDelegate

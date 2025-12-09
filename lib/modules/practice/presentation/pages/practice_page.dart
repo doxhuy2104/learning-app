@@ -38,84 +38,80 @@ class _PracticePageState extends State<PracticePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
+
+      appBar: AppBar(
+        title: Text(context.localization.practice),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       body: BlocBuilder<PracticeBloc, PracticeState>(
         bloc: _practiceBloc,
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppDimensions.insetTop(context).verticalSpace,
-              Text(
-                context.localization.practice,
-                style: Styles.h4.regular,
-              ).paddingOnly(left: 16),
-              state.subjects.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No subjects available',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )
-                  : Expanded(
-                      child: RefreshIndicator(
-                        color: AppColors.primary,
-                        onRefresh: () async {
-                          _practiceBloc.add(GetSubjects());
-                        },
-                        child: ListView.builder(
-                          padding: EdgeInsets.all(16),
-                          itemCount: state.subjects.length,
-                          itemBuilder: (context, index) {
-                            final subject = state.subjects[index];
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                              ),
-                              child: Button(
-                                onPress: () {
-                                  NavigationHelper.navigate(
-                                    '${AppRoutes.modulePractice}${PracticeModuleRoutes.course}',
-                                    args: {
-                                      'subjectId': subject.id,
-                                      'name': subject.title,
-                                    },
-                                  );
-                                },
-                                borderRadius: BorderRadius.circular(12),
-                                child: Row(
-                                  spacing: 8,
-                                  children: [
-                                    subject.image!.endsWith('png')
-                                        ? CachedNetworkImage(
-                                            imageUrl: subject.image ?? '',
-                                            width: 40,
-                                          )
-                                        : SvgPicture.network(
-                                            subject.image ?? '',
-                                            width: 40,
-                                          ),
-                                    Text(
-                                      subject.title ?? '',
-                                      style: Styles.large.smb,
-                                    ),
-                                  ],
-                                ).paddingSymmetric(h: 16, v: 8),
-                              ),
-                            ).paddingOnly(bottom: 8);
+          return state.subjects.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No subjects available',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )
+              : RefreshIndicator(
+                  color: AppColors.primary,
+                  onRefresh: () async {
+                    _practiceBloc.add(GetSubjects());
+                  },
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(16),
+                    itemCount: state.subjects.length,
+                    itemBuilder: (context, index) {
+                      final subject = state.subjects[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          color: Colors.white,
+                        ),
+                        child: Button(
+                          onPress: () {
+                            NavigationHelper.navigate(
+                              '${AppRoutes.modulePractice}${PracticeModuleRoutes.course}',
+                              args: {
+                                'subjectId': subject.id,
+                                'name': subject.title,
+                              },
+                            );
                           },
-                        ).paddingOnly(bottom: AppDimensions.paddingNavBar),
-                      ),
-                    ),
-            ],
-          );
+                          borderRadius: BorderRadius.circular(12),
+                          child: Row(
+                            spacing: 8,
+                            children: [
+                              subject.image!.endsWith('png')
+                                  ? CachedNetworkImage(
+                                      imageUrl: subject.image ?? '',
+                                      width: 40,
+                                    )
+                                  : SvgPicture.network(
+                                      subject.image ?? '',
+                                      width: 40,
+                                    ),
+                              Text(
+                                subject.title ?? '',
+                                style: Styles.large.smb,
+                              ),
+                            ],
+                          ).paddingSymmetric(h: 16, v: 8),
+                        ),
+                      ).paddingOnly(bottom: 8);
+                    },
+                  ).paddingOnly(bottom: AppDimensions.paddingNavBar),
+                );
         },
       ),
     );

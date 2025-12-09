@@ -13,9 +13,9 @@ class AppRepository {
 
   AppRepository({required this.api});
   Future<Either<DioFailure, List<QuestionModel>>> getQuesttionsByExamId(
-    int examId,
-    int page,
-    int limit,
+    {required int examId,
+    int page = 1,
+    int limit=100,}
   ) async {
     try {
       final response = await api.getQuesttionsByExamId(examId, page, limit);

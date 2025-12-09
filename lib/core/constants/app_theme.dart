@@ -4,6 +4,7 @@ import 'package:learning_app/core/constants/app_colors.dart';
 
 class AppTheme {
   static ThemeData get theme => ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
     fontFamily: 'BeVietnamPro',
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,

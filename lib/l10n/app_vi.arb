@@ -44,5 +44,24 @@
   "groupSelection":"Chọn tổ hợp",
   "selectBlock":"Chọn khối",
   "selectGroup":"Chọn tổ hợp",
-  "save":"Lưu"
+  "save":"Lưu",
+  "examQuestions":"Đề thi",
+  "history":"Lịch sử",
+  "next":"Câu tiếp theo",
+  "previous":"Câu trước",
+  "submit":"Nộp bài",
+  "exit":"Exit",
+    "exitTitle":"Bạn có chắc muốn thoát?",
+  "exitMessage":"Tiến trình làm bài của bạn sẽ không được lưu",
+
+   "submitTitle":"Bạn có chắc muốn nộp bài?",
+ "submitMessage":"Hệ thống sẽ tự động chấm điểm và hiển thị kết quả cho bạn",
+ "submitMessage1":"Bạn vẫn còn {count} câu hỏi chưa trả lời",
+ "@submitMessage1":{
+  "placeholders":{
+    "count":{
+      "type":"num"
+    }
+  }
+ }
 }

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:learning_app/core/components/buttons/button.dart';
 import 'package:learning_app/core/constants/app_colors.dart';
+import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/constants/app_styles.dart';
 import 'package:learning_app/core/extensions/num_extension.dart';
 import 'package:learning_app/core/extensions/widget_extension.dart';
+import 'package:learning_app/core/helpers/navigation_helper.dart';
 import 'package:learning_app/core/models/course_model.dart';
 import 'package:learning_app/core/models/lesson_model.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/exam/data/repositories/exam_repository.dart';
+import 'package:learning_app/modules/exam/general/exam_module_routes.dart';
 
 class SubjectExamPage extends StatefulWidget {
   const SubjectExamPage({super.key});
@@ -44,6 +48,7 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
   Future<void> _loadExams() async {
     final repository = Modular.get<ExamRepository>();
     final rt = await repository.getExams(subjectId: _subjectId);
+    await Future.delayed(Duration(seconds: 2));
     rt.fold(
       (l) {
         Utils.debugLogError(l.reason);
@@ -63,16 +68,18 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(_name),
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: RefreshIndicator(
+        color: AppColors.primary,
         onRefresh: _loadExams,
         child: _isLoading
-            ? Center(child: CircularProgressIndicator(color: AppColors.primary))
+            ? _buildSkeletonList()
             : _exams.isEmpty
             ? _buildEmptyState()
             : ListView.builder(
@@ -118,7 +125,7 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -188,7 +195,15 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
         children: List.generate(
           lesson.exams?.length ?? 0,
           (index) => Button(
-            onPress: () {},
+            onPress: () {
+              NavigationHelper.navigate(
+                '${AppRoutes.moduleExam}${ExamModuleRoutes.examQuestions}',
+                args: {
+                  'examId': lesson.exams?[index].id,
+                  'duration': lesson.exams?[index].duration,
+                },
+              );
+            },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               decoration: BoxDecoration(
@@ -196,24 +211,46 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
                   top: BorderSide(color: AppColors.borderColor, width: 1),
                 ),
               ),
-              child: Text(lesson.exams?[index].title ?? ''),
+              child: Row(
+                children: [
+                  Expanded(child: Text(lesson.exams?[index].title ?? '')),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 16,
+                    color: Colors.black54,
+                  ),
+                ],
+              ),
             ).paddingOnly(left: 16),
           ),
         ),
+      ),
+    );
+  }
 
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: Text(
-        //         lesson.title ?? 'Bài học ${index + 1}',
-        //         style: Styles.medium.regular,
-        //         maxLines: 2,
-        //         overflow: TextOverflow.ellipsis,
-        //       ),
-        //     ),
-        //     Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
-        //   ],
-        // ),
+  Widget _buildSkeletonList() {
+    return Column(
+      spacing: 12,
+      children: [
+        _buildSkeletonItem(),
+        _buildSkeletonItem(),
+        _buildSkeletonItem(),
+        _buildSkeletonItem(),
+        _buildSkeletonItem(),
+        _buildSkeletonItem(),
+        _buildSkeletonItem(),
+      ],
+    ).paddingOnly(top: 16, left: 16, right: 16);
+  }
+
+  Widget _buildSkeletonItem() {
+    return SkeletonItem(
+      child: SkeletonAvatar(
+        style: SkeletonAvatarStyle(
+          borderRadius: BorderRadius.circular(16),
+          height: 80,
+          width: double.infinity,
+        ),
       ),
     );
   }

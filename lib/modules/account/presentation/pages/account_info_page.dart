@@ -16,8 +16,6 @@ import 'package:learning_app/modules/account/data/repositories/account_repositor
 import 'package:learning_app/modules/account/presentation/bloc/account_bloc.dart';
 import 'package:learning_app/modules/account/presentation/bloc/account_event.dart';
 import 'package:learning_app/modules/account/presentation/bloc/account_state.dart';
-import 'package:learning_app/modules/auth/presentation/bloc/auth_bloc.dart';
-import 'package:learning_app/modules/auth/presentation/bloc/auth_state.dart';
 
 class AccountInfoPage extends StatefulWidget {
   const AccountInfoPage({super.key});
@@ -36,7 +34,6 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   String? _selectedBlock;
   int? _selectedGroup;
   final _accountBloc = Modular.get<AccountBloc>();
-  final _authBloc = Modular.get<AuthBloc>();
 
   String _getBlockPrefix(String blockLabel) {
     if (blockLabel.contains('A')) return 'A';

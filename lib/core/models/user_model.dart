@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:learning_app/core/models/group_model.dart';
 
 class UserModel extends Equatable {
-  final int? userId;
+  final int? id;
   final String? avatar;
   final String? fullName;
   final String? accessToken;
@@ -11,7 +11,7 @@ class UserModel extends Equatable {
   final GroupModel? group;
 
   const UserModel({
-    this.userId,
+    this.id,
     this.avatar,
     this.fullName,
     this.accessToken,
@@ -23,7 +23,7 @@ class UserModel extends Equatable {
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
-    final int? userId = mapData['userId'];
+    final int? id = mapData['id'];
     final String? avatar = mapData['avatar'];
     final String? fullName = mapData['fullName'];
     final String? accessToken = mapData['accessToken'];
@@ -34,7 +34,7 @@ class UserModel extends Equatable {
     );
 
     return UserModel(
-      userId: userId,
+      id: id,
       avatar: avatar,
       fullName: fullName,
       accessToken: accessToken,
@@ -45,7 +45,7 @@ class UserModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'userId': userId,
+    'id': id,
     'avatar': avatar,
     'fullName': fullName,
     'accessToken': accessToken,
@@ -55,7 +55,7 @@ class UserModel extends Equatable {
   };
 
   UserModel copyWith({
-    int? userId,
+    int? id,
     String? avatar,
     String? fullName,
     String? accessToken,
@@ -64,7 +64,7 @@ class UserModel extends Equatable {
     GroupModel? group,
   }) {
     return UserModel(
-      userId: userId ?? this.userId,
+      id: id ?? this.id,
       avatar: avatar ?? this.avatar,
       fullName: fullName ?? this.fullName,
       accessToken: accessToken ?? this.accessToken,
@@ -76,7 +76,7 @@ class UserModel extends Equatable {
 
   @override
   List<Object?> get props => [
-    userId,
+    id,
     avatar,
     fullName,
     accessToken,
@@ -87,6 +87,6 @@ class UserModel extends Equatable {
 
   @override
   String toString() {
-    return 'User: id:$userId, avatar: $avatar, fullName: $fullName, accessToken: $accessToken, email: $email, loginType:$loginType, group:$group';
+    return 'User: id:$id, avatar: $avatar, fullName: $fullName, accessToken: $accessToken, email: $email, loginType:$loginType, group:$group';
   }
 }

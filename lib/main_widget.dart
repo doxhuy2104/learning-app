@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:learning_app/core/constants/app_keys.dart';
 import 'package:learning_app/core/constants/app_routes.dart';
@@ -28,7 +27,6 @@ class MainWidget extends StatefulWidget {
 }
 
 class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
-  bool _firstLoad = false;
   final sharedPreferenceHelper = Modular.get<SharedPreferenceHelper>();
   final _authBloc = Modular.get<AuthBloc>();
   @override

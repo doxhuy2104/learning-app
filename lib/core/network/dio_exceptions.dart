@@ -1,7 +1,4 @@
 import 'package:dio/dio.dart';
-// import 'package:ai_image_gen_app_flutter/core/extensions/localized_extension.dart';
-import 'package:learning_app/core/constants/app_keys.dart';
-import 'package:learning_app/core/extensions/localized_extension.dart';
 
 class DioExceptions implements Exception {
   late String message;

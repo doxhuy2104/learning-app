@@ -12,7 +12,6 @@ import 'package:learning_app/core/constants/app_routes.dart';
 import 'package:learning_app/core/extensions/localized_extension.dart';
 import 'package:learning_app/core/extensions/widget_extension.dart';
 import 'package:learning_app/core/helpers/navigation_helper.dart';
-import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/account/general/account_module_routes.dart';
 import 'package:learning_app/modules/account/presentation/bloc/account_bloc.dart';
 import 'package:learning_app/modules/account/presentation/bloc/account_state.dart';
