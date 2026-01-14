@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:learning_app/core/components/app_indicator.dart';
 import 'package:learning_app/core/models/user_model.dart';
 import 'package:learning_app/core/network/dio_exceptions.dart';
 import 'package:learning_app/core/network/dio_failure.dart';
@@ -22,6 +23,8 @@ class AuthRepository {
     } on DioException catch (e) {
       final reason = DioExceptions.fromDioError(e).toString();
       final statusCode = e.response?.statusCode.toString() ?? '';
+      AppIndicator.hide();
+
       return Left(ApiFailure(reason: reason, statusCode: statusCode));
     } catch (e) {
       return Left(ApiFailure(reason: e.toString(), statusCode: '400'));

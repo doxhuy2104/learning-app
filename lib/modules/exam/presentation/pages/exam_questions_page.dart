@@ -6,6 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_skeleton_ui/flutter_skeleton_ui.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:learning_app/core/components/app_dialog.dart';
+import 'package:learning_app/core/components/app_indicator.dart';
 import 'package:learning_app/core/components/buttons/button.dart';
 import 'package:learning_app/core/components/buttons/outline_button.dart';
 import 'package:learning_app/core/components/buttons/primary_button.dart';
@@ -92,14 +93,20 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
   late PageController _pageController;
   late ScrollController _questionSelectionScrollController;
   int _currentPage = 0;
-  Map<int, int?> _selectedAnswers = {};
+  final Map<int, dynamic> _userAnswers = {};
+  // Map<int, String?> _trueFalseAnswers = {};
+  // Map<int, String?> _shortAnswers = {};
 
   Timer? _timer;
   ValueNotifier<int>? _remainingTimeNotifier;
 
   late int _examId;
+  late int _subjectId;
+
   String? _examTitle;
   int _duration = 0;
+  final _shortAnswerController = TextEditingController();
+  final _shortAnswerFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -109,14 +116,53 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
 
     final args = Modular.args.data as Map<String, dynamic>?;
     _examId = args?['examId'] ?? 0;
+    _subjectId = args?['subjectId'] ?? 0;
+
     _examTitle = args?['examTitle'] ?? '';
     _duration = args?['duration'] ?? 0;
     Utils.debugLog(_duration);
 
     final initialTime = _duration * 60;
+    // final initialTime = 10;
+    _examBloc.add(ResetExamData());
     _remainingTimeNotifier = ValueNotifier<int>(initialTime);
     _loadQuestions();
     _startTimer();
+    _setupShortAnswerFocusListener();
+  }
+
+  void _setupShortAnswerFocusListener() {
+    _shortAnswerFocusNode.addListener(() {
+      if (!_shortAnswerFocusNode.hasFocus) {
+        // User unfocused the text input, save the answer
+        if (_currentPage < _examBloc.state.questions.length) {
+          final currentQuestion = _examBloc.state.questions[_currentPage];
+          if (currentQuestion.type == 'short_answer' &&
+              currentQuestion.orderIndex != null) {
+            _saveShortAnswer(currentQuestion.orderIndex!);
+          }
+        }
+      }
+    });
+  }
+
+  void _saveShortAnswer(int questionOrderIndex) {
+    final answerText = _shortAnswerController.text.trim();
+
+    setState(() {
+      _userAnswers[questionOrderIndex] = answerText.isNotEmpty
+          ? answerText
+          : null;
+    });
+
+    _examBloc.add(
+      AddUserAnswer(
+        examId: _examId,
+        questionOrderIndex: questionOrderIndex,
+        answerOrderIndex: null,
+        shortAnswer: answerText.isNotEmpty ? answerText : null,
+      ),
+    );
   }
 
   void _startTimer() {
@@ -127,6 +173,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
           _remainingTimeNotifier!.value = currentTime - 1;
         } else {
           _timer?.cancel();
+          NavigationHelper.goBack();
         }
       }
     });
@@ -142,7 +189,9 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
     _remainingTimeNotifier?.dispose();
     _pageController.dispose();
     _questionSelectionScrollController.dispose();
-    _examBloc.add(ResetExamData());
+    _shortAnswerController.dispose();
+    _shortAnswerFocusNode.dispose();
+    // _examBloc.add(ResetExamData());
     super.dispose();
   }
 
@@ -171,9 +220,15 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
       confirmText: context.localization.submit,
       cancelText: context.localization.cancel,
       onConfirm: () {
-        _examBloc.add(ResetExamData());
         AppDialog.hide();
-        NavigationHelper.goBack();
+        _examBloc.add(
+          SubmitExam(
+            examId: _examId,
+            timeSpent: _duration * 60 - _remainingTimeNotifier!.value,
+            subjectId: _subjectId,
+          ),
+        );
+        AppIndicator.show();
       },
       onCancel: () {
         AppDialog.hide();
@@ -241,7 +296,14 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
             return Column(
               children: [
                 state.isLoading
-                    ? _buildSkeleton().paddingAll(16)
+                    ? Expanded(
+                        child: _buildSkeleton().paddingOnly(
+                          top: 8,
+                          left: 16,
+                          right: 16,
+                          bottom: 16,
+                        ),
+                      )
                     : Expanded(
                         child: Column(
                           children: [
@@ -250,9 +312,40 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                               child: PageView.builder(
                                 controller: _pageController,
                                 onPageChanged: (index) {
+                                  // Save current short answer before changing page
+                                  if (_currentPage <
+                                      _examBloc.state.questions.length) {
+                                    final previousQuestion =
+                                        _examBloc.state.questions[_currentPage];
+                                    if (previousQuestion.type ==
+                                            'short_answer' &&
+                                        previousQuestion.orderIndex != null) {
+                                      _saveShortAnswer(
+                                        previousQuestion.orderIndex!,
+                                      );
+                                    }
+                                  }
+
                                   setState(() {
                                     _currentPage = index;
                                   });
+
+                                  // Load answer for new question if it exists
+                                  if (index <
+                                      _examBloc.state.questions.length) {
+                                    final newQuestion =
+                                        _examBloc.state.questions[index];
+                                    if (newQuestion.type == 'short_answer' &&
+                                        newQuestion.orderIndex != null) {
+                                      final existingAnswer =
+                                          _userAnswers[newQuestion.orderIndex!];
+                                      _shortAnswerController.text =
+                                          existingAnswer?.toString() ?? '';
+                                    } else {
+                                      _shortAnswerController.clear();
+                                    }
+                                  }
+
                                   // Scroll question selection to center
                                   WidgetsBinding.instance.addPostFrameCallback((
                                     _,
@@ -263,6 +356,24 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                                 itemCount: state.questions.length,
                                 itemBuilder: (context, index) {
                                   final question = state.questions[index];
+                                  // Initialize controller for current page on first build
+                                  if (index == _currentPage &&
+                                      question.type == 'short_answer' &&
+                                      question.orderIndex != null) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          final existingAnswer =
+                                              _userAnswers[question
+                                                  .orderIndex!];
+                                          if (_shortAnswerController.text !=
+                                              (existingAnswer?.toString() ??
+                                                  '')) {
+                                            _shortAnswerController.text =
+                                                existingAnswer?.toString() ??
+                                                '';
+                                          }
+                                        });
+                                  }
                                   return _buildQuestionCard(question);
                                 },
                               ),
@@ -324,8 +435,6 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
               ],
             );
           },
-          // listener: (context, state) {},
-          // child: ,
         ),
       ),
     );
@@ -333,16 +442,17 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
 
   Widget _buildQuestionCard(QuestionModel question) {
     final questionOrderIndex = question.orderIndex;
-    final selectedAnswerOrderIndex = _selectedAnswers[questionOrderIndex];
-
+    final selectedAnswerOrderIndex = _userAnswers[questionOrderIndex];
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Text(question.orderIndex.toString()),
           DisplayHtml(htmlContent: question.content ?? ''),
+
           const SizedBox(height: 12),
-          if (question.answers != null && question.answers!.isNotEmpty) ...[
+          if (question.type == 'choice') ...[
             ...question.answers!.asMap().entries.map((entry) {
               final answer = entry.value;
               final answerOrderIndex = answer.orderIndex;
@@ -353,14 +463,9 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                 child: Button(
                   onPress: () {
                     if (questionOrderIndex == null) return;
-                    // if (isSelected) {
-                    //   _selectedAnswers.remove(questionId);
-                    // }
-                    //  else {
-                    if (_selectedAnswers[questionOrderIndex] !=
-                        answerOrderIndex) {
+                    if (_userAnswers[questionOrderIndex] != answerOrderIndex) {
                       setState(() {
-                        _selectedAnswers[questionOrderIndex] = answerOrderIndex;
+                        _userAnswers[questionOrderIndex] = answerOrderIndex;
                       });
                       _examBloc.add(
                         AddUserAnswer(
@@ -376,7 +481,10 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                   },
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    padding: EdgeInsets.all(isSelected ? 15 : 16),
+                    padding: EdgeInsets.symmetric(
+                      vertical: isSelected ? 3 : 4,
+                      horizontal: isSelected ? 15 : 16,
+                    ),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: isSelected
@@ -399,11 +507,109 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                 ),
               );
             }).toList(),
-          ] else
+          ] else if (question.type == 'short_answer') ...[
             TextInput(
+              controller: _shortAnswerController,
+              focusNode: _shortAnswerFocusNode,
               keyboardType: TextInputType.number,
               placeholder: 'Nhập đáp án',
             ),
+          ] else ...[
+            ...question.answers!.asMap().entries.map((entry) {
+              final answer = entry.value;
+              final answerOrderIndex = answer.orderIndex;
+              String? trueFalseAnswer = _userAnswers[questionOrderIndex];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: PopupMenuButton(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                  padding: EdgeInsetsGeometry.zero,
+                  menuPadding: EdgeInsets.zero,
+                  onSelected: (value) {
+                    if (questionOrderIndex == null) return;
+
+                    trueFalseAnswer ??= '----';
+
+                    trueFalseAnswer = trueFalseAnswer?.replaceRange(
+                      entry.key,
+                      entry.key + 1,
+                      value ? 'T' : 'F',
+                    );
+                    setState(() {
+                      _userAnswers[questionOrderIndex] = trueFalseAnswer;
+                    });
+                    _examBloc.add(
+                      AddUserAnswer(
+                        examId: _examId,
+                        questionOrderIndex: questionOrderIndex,
+                        answerOrderIndex: answerOrderIndex,
+                        isCorrect: null, // Để bloc tính toán
+                        shortAnswer: null,
+                        trueFalseAnswer: trueFalseAnswer,
+                      ),
+                    );
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                    PopupMenuItem<bool>(
+                      value: true,
+                      child: Text(
+                        'Đúng',
+                        style: Styles.medium.regular.copyWith(
+                          color: const Color.fromARGB(255, 0, 221, 99),
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem<bool>(
+                      value: false,
+                      child: Text(
+                        'Sai',
+                        style: Styles.medium.regular.copyWith(
+                          color: AppColors.danger,
+                        ),
+                      ),
+                    ),
+                  ],
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: trueFalseAnswer?[entry.key] != null ? 3 : 4,
+                      horizontal: trueFalseAnswer?[entry.key] != null ? 15 : 16,
+                    ),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color:
+                          trueFalseAnswer?[entry.key] != null &&
+                              trueFalseAnswer?[entry.key] != '-'
+                          ? (trueFalseAnswer![entry.key] == 'T'
+                                ? AppColors.success.withValues(alpha: 0.05)
+                                : AppColors.danger.withValues(alpha: 0.05))
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color:
+                            trueFalseAnswer?[entry.key] != null &&
+                                trueFalseAnswer?[entry.key] != '-'
+                            ? (trueFalseAnswer![entry.key] == 'T'
+                                  ? AppColors.success
+                                  : AppColors.danger)
+                            : AppColors.borderColor,
+                        width:
+                            trueFalseAnswer?[entry.key] != null &&
+                                trueFalseAnswer?[entry.key] != '-'
+                            ? 2
+                            : 1,
+                      ),
+                    ),
+                    child: DisplayHtml(
+                      htmlContent: answer.content ?? '',
+                      fontSize: 16,
+                      maxWidth: MediaQuery.of(context).size.width - 80,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ],
         ],
       ),
     );
@@ -422,11 +628,12 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
             ),
           ),
           16.verticalSpace,
-          SkeletonAvatar(
-            style: SkeletonAvatarStyle(
-              borderRadius: BorderRadius.circular(16),
-              width: double.infinity,
-              height: 200,
+          Expanded(
+            child: SkeletonAvatar(
+              style: SkeletonAvatarStyle(
+                borderRadius: BorderRadius.circular(16),
+                width: double.infinity,
+              ),
             ),
           ),
           12.verticalSpace,
@@ -434,7 +641,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
             style: SkeletonAvatarStyle(
               borderRadius: BorderRadius.circular(16),
               width: double.infinity,
-              height: 70,
+              height: 50,
             ),
           ),
           12.verticalSpace,
@@ -442,7 +649,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
             style: SkeletonAvatarStyle(
               borderRadius: BorderRadius.circular(16),
               width: double.infinity,
-              height: 70,
+              height: 50,
             ),
           ),
           12.verticalSpace,
@@ -450,7 +657,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
             style: SkeletonAvatarStyle(
               borderRadius: BorderRadius.circular(16),
               width: double.infinity,
-              height: 70,
+              height: 50,
             ),
           ),
           12.verticalSpace,
@@ -458,7 +665,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
             style: SkeletonAvatarStyle(
               borderRadius: BorderRadius.circular(16),
               width: double.infinity,
-              height: 70,
+              height: 50,
             ),
           ),
         ],
@@ -487,23 +694,59 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
   Widget _buildQuestionSelection() {
     return Container(
       height: 60,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ListView.builder(
         controller: _questionSelectionScrollController,
         scrollDirection: Axis.horizontal,
         itemCount: _examBloc.state.questions.length,
         itemBuilder: (context, index) {
-          final questionOrderIndex =
-              _examBloc.state.questions[index].orderIndex;
-          final isAnswered = _selectedAnswers[questionOrderIndex] != null;
+          final question = _examBloc.state.questions[index];
+          final questionOrderIndex = question.orderIndex;
+          bool isAnswered = false;
+          if (questionOrderIndex != null) {
+            final userValue = _userAnswers[questionOrderIndex];
+            if (question.type == 'choice') {
+              isAnswered = userValue != null;
+            } else if (question.type == 'true_false') {
+              final tf = userValue is String ? userValue : null;
+              isAnswered = tf != null && !tf.contains('-');
+            } else if (question.type == 'short_answer') {
+              final sa = userValue is String ? userValue : null;
+              isAnswered = sa != null && sa.isNotEmpty;
+            }
+          }
           final isCurrent = index == _currentPage;
 
           return GestureDetector(
             onTap: () {
+              // Save current short answer before changing page
+              if (_currentPage < _examBloc.state.questions.length) {
+                final previousQuestion =
+                    _examBloc.state.questions[_currentPage];
+                if (previousQuestion.type == 'short_answer' &&
+                    previousQuestion.orderIndex != null) {
+                  _saveShortAnswer(previousQuestion.orderIndex!);
+                }
+              }
+
               _pageController.jumpToPage(index);
               setState(() {
                 _currentPage = index;
               });
+
+              // Load answer for new question if it exists
+              if (index < _examBloc.state.questions.length) {
+                final newQuestion = _examBloc.state.questions[index];
+                if (newQuestion.type == 'short_answer' &&
+                    newQuestion.orderIndex != null) {
+                  final existingAnswer = _userAnswers[newQuestion.orderIndex!];
+                  _shortAnswerController.text =
+                      existingAnswer?.toString() ?? '';
+                } else {
+                  _shortAnswerController.clear();
+                }
+              }
+
               // Scroll question selection to center
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _scrollToQuestion(index, context);

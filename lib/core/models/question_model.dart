@@ -5,14 +5,13 @@ class QuestionModel extends Equatable {
   final int? id;
   final int? examId;
   final int? paragraphId;
-  final String?
-  type; // multiple_choice, true_false, short_answer, essay, fill_blank
+  final String? type; // choice, true_false, short_answer
   final String? content;
   final String? dataType;
   final List<AnswerModel>? answers;
   final String? explanation;
   final int? orderIndex;
-  final DateTime? createdAt;
+  final String? shortAnswer;
 
   const QuestionModel({
     this.id,
@@ -24,7 +23,7 @@ class QuestionModel extends Equatable {
     this.answers,
     this.explanation,
     this.orderIndex,
-    this.createdAt,
+    this.shortAnswer,
   });
 
   static fromJson(Map<String, dynamic>? mapData) {
@@ -43,9 +42,7 @@ class QuestionModel extends Equatable {
         .toList();
     final String? explanation = mapData['explanation'];
     final int? orderIndex = mapData['orderIndex'];
-    final DateTime? createdAt = mapData['createdAt'] != null
-        ? DateTime.tryParse(mapData['createdAt'].toString())
-        : null;
+    final String? shortAnswer = mapData['shortAnswer'];
 
     return QuestionModel(
       id: id,
@@ -57,7 +54,7 @@ class QuestionModel extends Equatable {
       answers: answers,
       explanation: explanation,
       orderIndex: orderIndex,
-      createdAt: createdAt,
+      shortAnswer: shortAnswer,
     );
   }
 
@@ -71,7 +68,7 @@ class QuestionModel extends Equatable {
     'answers': answers?.map((e) => e.toJson()).toList(),
     'explanation': explanation,
     'orderIndex': orderIndex,
-    'createdAt': createdAt?.toIso8601String(),
+    'shortAnswer': shortAnswer,
   };
 
   QuestionModel copyWith({
@@ -84,7 +81,7 @@ class QuestionModel extends Equatable {
     List<AnswerModel>? answers,
     String? explanation,
     int? orderIndex,
-    DateTime? createdAt,
+    String? shortAnswer,
   }) {
     return QuestionModel(
       id: id ?? this.id,
@@ -96,7 +93,7 @@ class QuestionModel extends Equatable {
       answers: answers ?? this.answers,
       explanation: explanation ?? this.explanation,
       orderIndex: orderIndex ?? this.orderIndex,
-      createdAt: createdAt ?? this.createdAt,
+      shortAnswer: shortAnswer ?? this.shortAnswer,
     );
   }
 
@@ -105,6 +102,6 @@ class QuestionModel extends Equatable {
 
   @override
   String toString() {
-    return 'Question: id:$id, examId: $examId, paragraphId: $paragraphId, type: $type, content: $content, dataType: $dataType, orderIndex: $orderIndex, answers: ${answers?.length ?? 0}';
+    return 'Question: id:$id, examId: $examId, paragraphId: $paragraphId, type: $type, content: $content, dataType: $dataType, orderIndex: $orderIndex, answers: ${answers?.length ?? 0}, shortAnswer: $shortAnswer';
   }
 }

@@ -15,11 +15,14 @@ class PracticeApi {
     }
   }
 
-  Future<Response> getCourses(int subjectId) async {
+  Future<Response> getCourses(int subjectId, {bool isExam = false}) async {
     String url = '/course/subject/$subjectId';
 
     try {
-      final response = await dioClient.get(url);
+      final response = await dioClient.get(
+        url,
+        queryParameters: {'isExam': isExam},
+      );
       return response;
     } catch (e) {
       rethrow;

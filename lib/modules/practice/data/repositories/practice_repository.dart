@@ -34,15 +34,15 @@ class PracticeRepository {
 
   Future<Either<DioFailure, List<CourseModel>>> getCourses({
     required int subjectId,
+    bool isExam = false,
   }) async {
     try {
-      final response = await api.getCourses(subjectId);
+      final response = await api.getCourses(subjectId, isExam: isExam);
 
       final List<CourseModel> courses = (response.data as List<dynamic>)
           .map(
             (e) =>
-                CourseModel.fromJson(e as Map<String, dynamic>)
-                    as CourseModel,
+                CourseModel.fromJson(e as Map<String, dynamic>) as CourseModel,
           )
           .toList();
       return Right(courses);

@@ -170,4 +170,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String submitMessage1(num count) {
     return 'You still have $count unanswered questions';
   }
+
+  @override
+  String get seeAll => 'See all';
 }

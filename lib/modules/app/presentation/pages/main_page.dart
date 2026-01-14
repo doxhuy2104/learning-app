@@ -9,9 +9,8 @@ import 'package:learning_app/modules/account/presentation/pages/account_page.dar
 import 'package:learning_app/modules/app/general/app_module_routes.dart';
 import 'package:learning_app/modules/app/presentation/components/title_navigation_bar/navigation_bar.dart';
 import 'package:learning_app/modules/app/presentation/components/title_navigation_bar/navigation_bar_item.dart';
-import 'package:learning_app/modules/practice/presentation/pages/practice_page.dart';
 import 'package:learning_app/modules/exam/presentation/pages/exam_page.dart';
-import 'package:learning_app/modules/home/presentation/pages/home_page.dart';
+import 'package:learning_app/modules/practice/presentation/pages/practice_page.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 class MainPage extends StatefulWidget {
@@ -40,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [HomePage(), PracticePage(), ExamPage(), AccountPage()];
+    return [PracticePage(), ExamPage(), AccountPage()];
   }
 
   void navigatePageView(int value) {
@@ -89,11 +88,11 @@ class _MainPageState extends State<MainPage> {
           indicatorColor: Colors.transparent,
           currentIndex: _currentIndex,
           items: [
-            TitledNavigationBarItem(
-              iconPath: AppIcons.icHomeInactive,
-              activeIconPath: AppIcons.icHomeActive,
-              title: context.localization.home,
-            ),
+            // TitledNavigationBarItem(
+            //   iconPath: AppIcons.icHomeInactive,
+            //   activeIconPath: AppIcons.icHomeActive,
+            //   title: context.localization.home,
+            // ),
             TitledNavigationBarItem(
               iconPath: AppIcons.icBook,
               activeIconPath: AppIcons.icBookActive,

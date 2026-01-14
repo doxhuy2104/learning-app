@@ -34,18 +34,25 @@ class ExamPage extends StatefulWidget {
 class _ExamPageState extends State<ExamPage> {
   final _examBloc = Modular.get<ExamBloc>();
   final _accountBloc = Modular.get<AccountBloc>();
-
+  final _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     _examBloc.add(GetExams());
+    _examBloc.add(GetHistories());
   }
 
-  String _formatTime(int? minutes) {
-    if (minutes == null) return '--';
-    if (minutes < 60) return '$minutes phút';
-    final hours = minutes ~/ 60;
-    final mins = minutes % 60;
+  String _formatTime(int? time) {
+    if (time == null) return '--';
+    if (time < 60) {
+      return '$time giây';
+    } else if (time < 3600) {
+      final mins = time ~/ 60;
+      return '$mins phút';
+    }
+    final minute = time ~/ 60;
+    final hours = minute ~/ 60;
+    final mins = minute % 60;
     if (mins == 0) return '$hours giờ';
     return '$hours giờ $mins phút';
   }
@@ -78,6 +85,7 @@ class _ExamPageState extends State<ExamPage> {
         title: Text(context.localization.exam),
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: BlocBuilder<AccountBloc, AccountState>(
         bloc: _accountBloc,
@@ -122,6 +130,7 @@ class _ExamPageState extends State<ExamPage> {
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
+                  controller: _scrollController,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -129,7 +138,9 @@ class _ExamPageState extends State<ExamPage> {
                       _buildSubjectSection(subjects).paddingOnly(top: 8),
 
                       // Exam History Section
-                      _buildExamHistorySection(state.examHistory),
+                      _buildExamHistorySection(state.examHistories),
+
+                      AppDimensions.paddingNavBar.verticalSpace,
                     ],
                   ),
                 ),
@@ -229,18 +240,31 @@ class _ExamPageState extends State<ExamPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(context.localization.history, style: Styles.h5.smb),
-              if (history.length > 5)
-                TextButton(
-                  onPressed: () {
-                    // Navigate to full history page
-                  },
-                  child: Text(
-                    'Xem tất cả',
-                    style: Styles.medium.regular.copyWith(
-                      color: AppColors.primary,
+              // if (history.length > 5)
+              Button(
+                onPress: () {
+                  NavigationHelper.navigate(
+                    '${AppRoutes.moduleExam}${ExamModuleRoutes.examHistory}',
+                  );
+                },
+                showEffect: false,
+
+                child: Row(
+                  children: [
+                    Text(
+                      context.localization.seeAll,
+                      style: Styles.medium.regular.copyWith(
+                        color: AppColors.primary,
+                      ),
                     ),
-                  ),
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: AppColors.primary,
+                      size: 14,
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
           12.verticalSpace,
@@ -285,12 +309,16 @@ class _ExamPageState extends State<ExamPage> {
           ),
         ],
       ),
-      child: InkWell(
-        onTap: () {
+      child: Button(
+        onPress: () {
           // Navigate to review exam
           NavigationHelper.navigate(
-            '${AppRoutes.moduleApp}${AppModuleRoutes.questions}',
-            args: {'examId': item.examId, 'isReview': true, 'examTitle': ''},
+            '${AppRoutes.moduleExam}${ExamModuleRoutes.examQuestionsResult}',
+            args: {
+              'historyId': item.id,
+              'examTitle': item.exam?.title,
+              'examId': item.examId,
+            },
           );
         },
         borderRadius: BorderRadius.circular(12),
@@ -298,35 +326,23 @@ class _ExamPageState extends State<ExamPage> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(Icons.quiz, color: AppColors.primary, size: 24),
-              ),
-              16.horizontalSpace,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Đề thi',
+                      item.exam?.title ?? '',
                       style: Styles.medium.smb,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     4.verticalSpace,
                     Row(
                       children: [
-                        Icon(Icons.star, size: 16, color: Colors.amber),
-                        4.horizontalSpace,
                         Text(
-                          '${item.score?.toStringAsFixed(1) ?? '0.0'}/10',
+                          item.score.toString(),
                           style: Styles.small.smb.copyWith(
-                            color: Colors.amber[700],
+                            // color: Colors.amber[700],
                           ),
                         ),
                         12.horizontalSpace,
@@ -336,14 +352,17 @@ class _ExamPageState extends State<ExamPage> {
                           color: Colors.grey[600],
                         ),
                         4.horizontalSpace,
-                        Text(_formatTime(1), style: Styles.small.secondary),
+                        Text(
+                          _formatTime(item.timeSpent),
+                          style: Styles.small.secondary,
+                        ),
                       ],
                     ),
-                    4.verticalSpace,
-                    Text(
-                      _formatDate(DateTime.now()),
-                      style: Styles.xsmall.secondary,
-                    ),
+                    // 4.verticalSpace,
+                    // Text(
+                    //   _formatDate(DateTime.now()),
+                    //   style: Styles.xsmall.secondary,
+                    // ),
                   ],
                 ),
               ),

@@ -271,8 +271,8 @@ class _SignInPageState extends State<SignInPage> {
                         }
                       } catch (e) {
                         Utils.debugLogError(e);
-                      } finally {
-                      }
+                        AppIndicator.hide();
+                      } finally {}
                     },
                   ),
                   24.verticalSpace,

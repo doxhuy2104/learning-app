@@ -8,30 +8,34 @@ final class ExamState extends Equatable {
   final List<CourseModel> exams;
   final List<QuestionModel> questions;
   final Map<int, UserAnswerModel> userAnswers;
-  final List<ExamHistoryModel> examHistory;
+  final List<ExamHistoryModel> examHistories;
   final bool isLoading;
+  final ExamHistoryModel? examHistory;
   const ExamState._({
     this.exams = const [],
     this.questions = const [],
-    this.examHistory = const [],
+    this.examHistories = const [],
     this.userAnswers = const {},
     this.isLoading = false,
+    this.examHistory,
   });
   const ExamState.initial() : this._();
   ExamState setState({
     List<CourseModel>? exams,
     List<QuestionModel>? questions,
 
-    List<ExamHistoryModel>? examHistory,
+    List<ExamHistoryModel>? examHistories,
     Map<int, UserAnswerModel>? userAnswers,
     bool? isLoading,
+    ExamHistoryModel? examHistory,
   }) {
     return ExamState._(
       exams: exams ?? this.exams,
       questions: questions ?? this.questions,
-      examHistory: examHistory ?? this.examHistory,
+      examHistories: examHistories ?? this.examHistories,
       userAnswers: userAnswers ?? this.userAnswers,
       isLoading: isLoading ?? this.isLoading,
+      examHistory: examHistory ?? this.examHistory,
     );
   }
 
@@ -48,18 +52,22 @@ final class ExamState extends Equatable {
               .whereType<QuestionModel>()
               .toList() ??
           [],
-      examHistory =
-          (json['examHistory'] as List<dynamic>?)
+      examHistories =
+          (json['examHistories'] as List<dynamic>?)
               ?.map((e) => ExamHistoryModel.fromJson(e as Map<String, dynamic>))
               .whereType<ExamHistoryModel>()
               .toList() ??
           [],
       userAnswers = {},
-      isLoading = false;
+      isLoading = false,
+      examHistory = ExamHistoryModel.fromJson(
+        json['examHistory'] as Map<String, dynamic>?,
+      );
 
   Map<String, dynamic> toJson() => {
     'exams': exams.map((e) => e.toJson()).toList(),
-    'examHistory': examHistory.map((e) => e.toJson()).toList(),
+    'examHistories': examHistories.map((e) => e.toJson()).toList(),
+    if (examHistory != null) 'examHistory': examHistory!.toJson(),
   };
 
   ExamState reset() {
@@ -69,9 +77,10 @@ final class ExamState extends Equatable {
   @override
   List<Object> get props => [
     exams.hashCode,
-    examHistory.hashCode,
+    examHistories.hashCode,
     questions.hashCode,
     userAnswers.hashCode,
     isLoading,
+    examHistory.hashCode,
   ];
 }

@@ -4,6 +4,8 @@ import 'package:learning_app/core/models/exam_model.dart';
 class LessonModel extends Equatable {
   final int? id;
   final int? courseId;
+    final int? subjectId;
+
   final String? title;
   final String? url;
   final int? orderIndex;
@@ -12,6 +14,7 @@ class LessonModel extends Equatable {
   const LessonModel({
     this.id,
     this.courseId,
+    this.subjectId,
     this.title,
     this.url,
     this.orderIndex,
@@ -23,6 +26,8 @@ class LessonModel extends Equatable {
 
     final int? id = mapData['id'];
     final int? courseId = mapData['courseId'];
+        final int? subjectId = mapData['subjectId'];
+
     final String? title = mapData['title'];
     final String? url = mapData['url'];
     final int? orderIndex = mapData['orderIndex'];
@@ -32,6 +37,7 @@ class LessonModel extends Equatable {
     return LessonModel(
       id: id,
       courseId: courseId,
+      subjectId:subjectId,
       title: title,
       url: url,
       orderIndex: orderIndex,
@@ -42,6 +48,7 @@ class LessonModel extends Equatable {
   Map<String, dynamic> toJson() => {
     'id': id,
     'courseId': courseId,
+    'subjectId':subjectId,
     'title': title,
     'url': url,
     'orderIndex': orderIndex,
@@ -51,6 +58,7 @@ class LessonModel extends Equatable {
   LessonModel copyWith({
     int? id,
     int? courseId,
+    int? subjectId,
     String? title,
     String? url,
     int? orderIndex,
@@ -59,6 +67,7 @@ class LessonModel extends Equatable {
     return LessonModel(
       id: id ?? this.id,
       courseId: courseId ?? this.courseId,
+      subjectId:subjectId??this.subjectId,
       title: title ?? this.title,
       url: url ?? this.url,
       orderIndex: orderIndex ?? this.orderIndex,

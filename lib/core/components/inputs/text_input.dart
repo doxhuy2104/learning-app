@@ -23,6 +23,7 @@ class TextInput extends StatefulWidget {
   final TextInputAction? textInputAction;
   final FocusNode? nextFocusNode;
   final bool disable;
+  final Function(String)? onChange;
   const TextInput({
     super.key,
     this.keyboardType,
@@ -39,6 +40,7 @@ class TextInput extends StatefulWidget {
     this.textInputAction,
     this.nextFocusNode,
     this.disable = false,
+    this.onChange,
   });
 
   @override
@@ -165,7 +167,6 @@ class _TextInputState extends State<TextInput> {
                       onTapOutside: (event) => Utils.hideKeyboard(),
                       cursorColor: AppColors.primary,
                       keyboardType: widget.keyboardType,
-
                       validator: (value) {
                         Utils.debugLog(value);
                         bool isTrue =
@@ -180,14 +181,16 @@ class _TextInputState extends State<TextInput> {
                         return errorMessage.isEmpty ? null : errorMessage;
                       },
                       focusNode: _focus,
-                      onChanged: (value) {
-                        // widget.validator?.call(value);
-                        if (_errorMessage.isNotEmpty) {
-                          setState(() {
-                            _errorMessage = '';
-                          });
-                        }
-                      },
+                      onChanged:
+                          widget.onChange ??
+                          (value) {
+                            // widget.validator?.call(value);
+                            if (_errorMessage.isNotEmpty) {
+                              setState(() {
+                                _errorMessage = '';
+                              });
+                            }
+                          },
                       obscureText: widget.isSecure ? _isHide : false,
                       textInputAction: widget.textInputAction,
                       onFieldSubmitted: (_) {

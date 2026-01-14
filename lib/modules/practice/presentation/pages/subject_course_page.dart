@@ -13,15 +13,17 @@ import 'package:learning_app/core/models/lesson_model.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/exam/data/repositories/exam_repository.dart';
 import 'package:learning_app/modules/exam/general/exam_module_routes.dart';
+import 'package:learning_app/modules/practice/data/repositories/practice_repository.dart';
+import 'package:learning_app/modules/practice/general/practice_module_routes.dart';
 
-class SubjectExamPage extends StatefulWidget {
-  const SubjectExamPage({super.key});
+class SubjectCoursePage extends StatefulWidget {
+  const SubjectCoursePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _SubjectExamPageState();
+  State<StatefulWidget> createState() => _SubjectCoursePageState();
 }
 
-class _SubjectExamPageState extends State<SubjectExamPage> {
+class _SubjectCoursePageState extends State<SubjectCoursePage> {
   String _name = '';
   int _subjectId = -1;
   List<CourseModel> _exams = [];
@@ -46,8 +48,8 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
   }
 
   Future<void> _loadExams() async {
-    final repository = Modular.get<ExamRepository>();
-    final rt = await repository.getExams(subjectId: _subjectId);
+    final repository = Modular.get<PracticeRepository>();
+    final rt = await repository.getCourses(subjectId: _subjectId);
     await Future.delayed(Duration(seconds: 2));
     rt.fold(
       (l) {
@@ -197,10 +199,9 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
           (index) => Button(
             onPress: () {
               NavigationHelper.navigate(
-                '${AppRoutes.moduleExam}${ExamModuleRoutes.examQuestions}',
+                '${AppRoutes.modulePractice}${PracticeModuleRoutes.courseQuestions}',
                 args: {
                   'examId': lesson.exams?[index].id,
-                  'duration': lesson.exams?[index].duration,
                   'subjectId': lesson.subjectId,
                 },
               );

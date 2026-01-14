@@ -81,7 +81,7 @@ class _PracticePageState extends State<PracticePage> {
                         child: Button(
                           onPress: () {
                             NavigationHelper.navigate(
-                              '${AppRoutes.modulePractice}${PracticeModuleRoutes.course}',
+                              '${AppRoutes.modulePractice}${PracticeModuleRoutes.subjectCourse}',
                               args: {
                                 'subjectId': subject.id,
                                 'name': subject.title,

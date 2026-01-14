@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class ExamModel extends Equatable {
   final int? id;
   final int? lessonId;
+  final int? subjectId;
   final int? courseId;
   final String? title;
   final String? url;
@@ -13,6 +14,7 @@ class ExamModel extends Equatable {
     this.id,
     this.lessonId,
     this.courseId,
+    this.subjectId,
     this.title,
     this.url,
     this.orderIndex,
@@ -24,6 +26,7 @@ class ExamModel extends Equatable {
 
     final int? id = mapData['id'];
     final int? lessonId = mapData['lessonId'];
+    final int? subjectId = mapData['subjectId'];
     final int? courseId = mapData['courseId'];
     final String? title = mapData['title'];
     final String? url = mapData['url'];
@@ -34,6 +37,7 @@ class ExamModel extends Equatable {
       id: id,
       lessonId: lessonId,
       courseId: courseId,
+      subjectId:subjectId,
       title: title,
       url: url,
       orderIndex: orderIndex,
@@ -45,6 +49,7 @@ class ExamModel extends Equatable {
     'id': id,
     'lessonId': lessonId,
     'courseId': courseId,
+    'subjectId':subjectId,
     'title': title,
     'url': url,
     'orderIndex': orderIndex,
@@ -55,6 +60,7 @@ class ExamModel extends Equatable {
     int? id,
     int? lessonId,
     int? courseId,
+    int? subjectId,
     String? title,
     String? url,
     int? orderIndex,
@@ -64,6 +70,7 @@ class ExamModel extends Equatable {
       id: id ?? this.id,
       lessonId: lessonId ?? this.lessonId,
       courseId: courseId ?? this.courseId,
+      subjectId:subjectId?? this.subjectId,
       title: title ?? this.title,
       url: url ?? this.url,
       orderIndex: orderIndex ?? this.orderIndex,

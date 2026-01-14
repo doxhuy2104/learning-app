@@ -169,4 +169,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String submitMessage1(num count) {
     return 'Bạn vẫn còn $count câu hỏi chưa trả lời';
   }
+
+  @override
+  String get seeAll => 'Xem tất cả';
 }

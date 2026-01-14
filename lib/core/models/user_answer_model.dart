@@ -2,88 +2,88 @@ import 'package:equatable/equatable.dart';
 
 class UserAnswerModel extends Equatable {
   final int? id;
-  final int? examId;
+  final int? historyId;
   final int? questionOrderIndex;
   final int? answerOrderIndex;
   final bool? isCorrect;
   final int? score;
   final int? time;
-  final DateTime? answeredAt;
   final String? shortAnswer;
+  final String? trueFalseAnswer;
   const UserAnswerModel({
     this.id,
-    this.examId,
+    this.historyId,
     this.questionOrderIndex,
     this.answerOrderIndex,
     this.isCorrect,
     this.score,
     this.time,
-    this.answeredAt,
     this.shortAnswer,
+    this.trueFalseAnswer,
   });
 
   static fromJson(Map<String, dynamic>? mapData) {
     if (mapData == null) return null;
 
     final int? id = mapData['id'];
-    final int? userId = mapData['userId'];
-    final int? examId = mapData['examId'];
+    final int? historyId = mapData['historyId'];
     final int? questionOrderIndex = mapData['questionOrderIndex'];
     final int? answerOrderIndex = mapData['answerOrderIndex'];
     final bool? isCorrect = mapData['isCorrect'];
-    final int? score = mapData['score'];
+    final dynamic rawScore = mapData['score'];
+    final int? score = rawScore is num
+        ? rawScore.toInt()
+        : int.tryParse(rawScore?.toString() ?? '');
     final int? time = mapData['time'];
-    final DateTime? answeredAt = mapData['answeredAt'] != null
-        ? DateTime.tryParse(mapData['answeredAt'].toString())
-        : null;
     final String? shortAnswer = mapData['shortAnswers'];
+    final String? trueFalseAnswer = mapData['trueFalseAnswer'];
 
     return UserAnswerModel(
       id: id,
-      examId: examId,
+      historyId: historyId,
       questionOrderIndex: questionOrderIndex,
       answerOrderIndex: answerOrderIndex,
       isCorrect: isCorrect,
       score: score,
       time: time,
-      answeredAt: answeredAt,
       shortAnswer: shortAnswer,
+      trueFalseAnswer: trueFalseAnswer,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'examId': examId,
+    'historyId': historyId,
     'questionOrderIndex': questionOrderIndex,
     'answerOrderIndex': answerOrderIndex,
     'isCorrect': isCorrect,
     'score': score,
     'time': time,
-    'answeredAt': answeredAt?.toIso8601String(),
     'shortAnswer': shortAnswer,
+    'trueFalseAnswer': trueFalseAnswer,
   };
 
   UserAnswerModel copyWith({
     int? id,
-    int? examId,
+    int? historyId,
     int? questionOrderIndex,
     int? answerOrderIndex,
     bool? isCorrect,
     int? score,
     int? time,
-    DateTime? answeredAt,
     String? shortAnswer,
+    String? trueFalseAnswer,
   }) {
     return UserAnswerModel(
       id: id ?? this.id,
-      examId: examId ?? this.examId,
+      historyId: historyId ?? this.historyId,
       questionOrderIndex: questionOrderIndex ?? this.questionOrderIndex,
       answerOrderIndex: answerOrderIndex ?? this.answerOrderIndex,
       isCorrect: isCorrect ?? this.isCorrect,
       score: score ?? this.score,
       time: time ?? this.time,
-      answeredAt: answeredAt ?? this.answeredAt,
       shortAnswer: shortAnswer ?? this.shortAnswer,
+      trueFalseAnswer: trueFalseAnswer ?? this.trueFalseAnswer,
     );
   }
 
@@ -92,6 +92,6 @@ class UserAnswerModel extends Equatable {
 
   @override
   String toString() {
-    return 'UserAnswer: id:$id, examId: $examId, questionOrderIndex: $questionOrderIndex, isCorrect: $isCorrect, score: $score, time: $time, shortAnswer: $shortAnswer';
+    return 'UserAnswer: id:$id, historyId: $historyId, questionOrderIndex: $questionOrderIndex, isCorrect: $isCorrect, score: $score, time: $time, shortAnswer: $shortAnswer, trueFalseAnswer: $trueFalseAnswer';
   }
 }
