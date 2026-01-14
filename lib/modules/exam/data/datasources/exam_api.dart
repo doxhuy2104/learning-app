@@ -5,7 +5,7 @@ import 'package:learning_app/core/utils/utils.dart';
 class ExamApi {
   final dioClient = Utils.dioClient;
   Future<Response> getExams(int subjectId) async {
-    String url = '/course/subject/$subjectId';
+    String url = '/exam-question/subject/$subjectId';
 
     try {
       final response = await dioClient.get(

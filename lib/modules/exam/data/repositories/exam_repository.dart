@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:learning_app/core/models/course_model.dart';
 import 'package:learning_app/core/models/exam_history_model.dart';
+import 'package:learning_app/core/models/exam_model.dart';
 import 'package:learning_app/core/models/question_model.dart';
 import 'package:learning_app/core/models/user_answer_model.dart';
 import 'package:learning_app/core/network/dio_exceptions.dart';
@@ -13,16 +14,38 @@ class ExamRepository {
 
   ExamRepository({required this.api});
 
-  Future<Either<DioFailure, List<CourseModel>>> getExams({
+  // Future<Either<DioFailure, List<CourseModel>>> getExams({
+  //   required int subjectId,
+  // }) async {
+  //   try {
+  //     final response = await api.getExams(subjectId);
+
+  //     final List<CourseModel> exams = (response.data as List<dynamic>)
+  //         .map(
+  //           (e) =>
+  //               CourseModel.fromJson(e as Map<String, dynamic>) as CourseModel,
+  //         )
+  //         .toList();
+  //     return Right(exams);
+  //   } on DioException catch (e) {
+  //     final reason = DioExceptions.fromDioError(e).toString();
+  //     final statusCode = e.response?.statusCode.toString() ?? '';
+  //     return Left(ApiFailure(reason: reason, statusCode: statusCode));
+  //   } catch (e) {
+  //     return Left(ApiFailure(reason: e.toString(), statusCode: '400'));
+  //   }
+  // }
+
+   Future<Either<DioFailure, List<ExamModel>>> getExams({
     required int subjectId,
   }) async {
     try {
       final response = await api.getExams(subjectId);
 
-      final List<CourseModel> exams = (response.data as List<dynamic>)
+      final List<ExamModel> exams = (response.data as List<dynamic>)
           .map(
             (e) =>
-                CourseModel.fromJson(e as Map<String, dynamic>) as CourseModel,
+                ExamModel.fromJson(e as Map<String, dynamic>) as ExamModel,
           )
           .toList();
       return Right(exams);
@@ -34,6 +57,7 @@ class ExamRepository {
       return Left(ApiFailure(reason: e.toString(), statusCode: '400'));
     }
   }
+
 
   Future<Either<DioFailure, List<QuestionModel>>> getExamQuestions({
     required int examId,

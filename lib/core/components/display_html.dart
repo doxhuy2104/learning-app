@@ -4,15 +4,18 @@ import 'package:flutter_html_table/flutter_html_table.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:learning_app/modules/app/presentation/pages/questions_page.dart'
     as questions_page;
+import 'package:markdown/markdown.dart' as md;
 
 class DisplayHtml extends StatelessWidget {
   final String htmlContent;
+  final String? dataType;
   final double? maxWidth;
   final double fontSize;
 
   const DisplayHtml({
     Key? key,
     required this.htmlContent,
+    this.dataType,
     this.maxWidth,
     this.fontSize = 16,
   }) : super(key: key);
@@ -33,6 +36,59 @@ class DisplayHtml extends StatelessWidget {
       (match) => '<tex-inline>${match.group(1) ?? ''}</tex-inline>',
     );
 
+    // Replace $...$ (inline math) with <tex-inline>...</tex-inline>
+    // Note: This is a simple regex and might match standard text if it contains '$'
+    // But in this context it's likely math.
+    processed = processed.replaceAllMapped(
+      RegExp(r'\$([^\$]+)\$'),
+      (match) => '<tex-inline>${match.group(1) ?? ''}</tex-inline>',
+    );
+
+    return processed;
+  }
+
+  String _processMarkdown(String markdown) {
+    String processed = markdown;
+    final latexMap = <String, String>{};
+    int counter = 0;
+
+    // Helper to store latex
+    String store(String latex) {
+      // Use a safe alphanumeric placeholder to avoid markdown formatting (like underscores causing italics)
+      final key = 'MATHFORMULA${counter++}PLACEHOLDER';
+      latexMap[key] = latex;
+      return key;
+    }
+
+    // Protect \[ ... \]
+    processed = processed.replaceAllMapped(
+      RegExp(r'\\\[(.*?)\\\]', dotAll: true),
+      (match) => store(match.group(0)!),
+    );
+
+    // Protect \( ... \)
+    processed = processed.replaceAllMapped(
+      RegExp(r'\\\((.*?)\\\)', dotAll: true),
+      (match) => store(match.group(0)!),
+    );
+    // Protect $ ... $
+    processed = processed.replaceAllMapped(
+      RegExp(r'\$(.*?)\$'),
+      (match) => store(match.group(0)!),
+    );
+
+    // Convert MD to HTML
+    // Use gitHubWeb extension set for tables, strikethrough, autolink, etc.
+    processed = md.markdownToHtml(
+      processed,
+      extensionSet: md.ExtensionSet.gitHubWeb,
+    );
+
+    // Restore LaTeX
+    latexMap.forEach((key, value) {
+      processed = processed.replaceAll(key, value);
+    });
+
     return processed;
   }
 
@@ -40,7 +96,14 @@ class DisplayHtml extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final effectiveMaxWidth = maxWidth ?? (screenWidth - 32);
-    final processedContent = _processLatex(htmlContent);
+
+    // Process markdown if needed
+    String contentToRender = htmlContent;
+    if (dataType == 'md' || dataType == 'markdown') {
+      contentToRender = _processMarkdown(contentToRender);
+    }
+
+    final processedContent = _processLatex(contentToRender);
 
     return Html(
       data: processedContent,
@@ -123,78 +186,66 @@ class DisplayHtml extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 8),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: effectiveMaxWidth),
-                  child: Html(
-                    data: tableHtml,
-                    extensions: [
-                      const TableHtmlExtension(),
-                      // Also handle LaTeX in table cells
-                      TagExtension(
-                        tagsToExtend: {"tex"},
-                        builder: (ctx) {
-                          return Math.tex(
-                            ctx.innerHtml,
-                            textStyle: TextStyle(fontSize: fontSize - 2),
-                          );
-                        },
-                      ),
-                      TagExtension(
-                        tagsToExtend: {"tex-inline"},
-                        builder: (ctx) {
-                          return Math.tex(
-                            ctx.innerHtml,
-                            textStyle: TextStyle(fontSize: fontSize - 2),
-                          );
-                        },
-                      ),
-                      TagExtension(
-                        tagsToExtend: {"math"},
-                        builder: (ctx) {
-                          final mathmlContent = ctx.innerHtml;
-                          final latex = questions_page.mathmlToLatex(
-                            mathmlContent,
-                          );
-                          return Math.tex(
-                            latex,
-                            textStyle: TextStyle(fontSize: fontSize - 2),
-                          );
-                        },
-                      ),
-                    ],
-                    style: {
-                      "table": Style(
-                        display: Display.block,
-                        border: Border.all(color: Colors.grey, width: 1),
-                      ),
-                      "td": Style(
-                        padding: HtmlPaddings.all(8),
-                        fontSize: FontSize(fontSize - 2),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      "th": Style(
-                        padding: HtmlPaddings.all(8),
-                        fontSize: FontSize(fontSize - 2),
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Colors.grey.shade100,
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      "tr": Style(
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                    },
-                  ),
+                child: Html(
+                  data: tableHtml,
+                  extensions: [
+                    const TableHtmlExtension(),
+                    // Also handle LaTeX in table cells
+                    TagExtension(
+                      tagsToExtend: {"tex"},
+                      builder: (ctx) {
+                        return Math.tex(
+                          ctx.innerHtml,
+                          textStyle: TextStyle(fontSize: fontSize - 2),
+                        );
+                      },
+                    ),
+                    TagExtension(
+                      tagsToExtend: {"tex-inline"},
+                      builder: (ctx) {
+                        return Math.tex(
+                          ctx.innerHtml,
+                          textStyle: TextStyle(fontSize: fontSize - 2),
+                        );
+                      },
+                    ),
+                    TagExtension(
+                      tagsToExtend: {"math"},
+                      builder: (ctx) {
+                        final mathmlContent = ctx.innerHtml;
+                        final latex = questions_page.mathmlToLatex(
+                          mathmlContent,
+                        );
+                        return Math.tex(
+                          latex,
+                          textStyle: TextStyle(fontSize: fontSize - 2),
+                        );
+                      },
+                    ),
+                  ],
+                  style: {
+                    "table": Style(
+                      display: Display.block,
+                      border: Border.all(color: Colors.grey, width: 1),
+                    ),
+                    "td": Style(
+                      padding: HtmlPaddings.all(8),
+                      fontSize: FontSize(fontSize - 2),
+                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                      textAlign: TextAlign.center,
+                    ),
+                    "th": Style(
+                      padding: HtmlPaddings.all(8),
+                      fontSize: FontSize(fontSize - 2),
+                      fontWeight: FontWeight.bold,
+                      backgroundColor: Colors.grey.shade100,
+                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                      textAlign: TextAlign.center,
+                    ),
+                    "tr": Style(
+                      border: Border.all(color: Colors.grey.shade300, width: 1),
+                    ),
+                  },
                 ),
               ),
             );

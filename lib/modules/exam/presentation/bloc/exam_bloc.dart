@@ -58,7 +58,7 @@ class ExamBloc extends HydratedBloc<ExamEvent, ExamState> {
               state.setState(
                 questions: r['questions'],
                 userAnswers: r['userAnswers'],
-                isLoading: false
+                isLoading: false,
               ),
             );
           },
@@ -233,7 +233,7 @@ class ExamBloc extends HydratedBloc<ExamEvent, ExamState> {
           examId: event.examId,
           score: totalScore,
           timeSpent: event.timeSpent,
-          subjectId: event.subjectId
+          subjectId: event.subjectId,
         );
 
         final rt = await repository.submitExam(history: history);
@@ -245,6 +245,13 @@ class ExamBloc extends HydratedBloc<ExamEvent, ExamState> {
             Utils.debugLog(r);
             AppIndicator.hide();
             emit(state.setState(examHistory: r));
+
+            if (r != null) {
+              if (r.id != null && r.examId != null) {
+                add(GetHistory(historyId: r.id!, examId: r.examId!));
+              }
+              add(GetHistories());
+            }
 
             NavigationHelper.replace(
               '${AppRoutes.moduleExam}${ExamModuleRoutes.examResult}',

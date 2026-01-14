@@ -8,7 +8,7 @@ import 'package:learning_app/core/constants/app_styles.dart';
 import 'package:learning_app/core/extensions/num_extension.dart';
 import 'package:learning_app/core/extensions/widget_extension.dart';
 import 'package:learning_app/core/helpers/navigation_helper.dart';
-import 'package:learning_app/core/models/course_model.dart';
+import 'package:learning_app/core/models/exam_model.dart';
 import 'package:learning_app/core/models/lesson_model.dart';
 import 'package:learning_app/core/utils/utils.dart';
 import 'package:learning_app/modules/exam/data/repositories/exam_repository.dart';
@@ -24,7 +24,9 @@ class SubjectExamPage extends StatefulWidget {
 class _SubjectExamPageState extends State<SubjectExamPage> {
   String _name = '';
   int _subjectId = -1;
-  List<CourseModel> _exams = [];
+  // List<CourseModel> _exams = [];
+  List<ExamModel> _exams = [];
+
   bool _isLoading = true;
   @override
   void initState() {
@@ -52,11 +54,13 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
     rt.fold(
       (l) {
         Utils.debugLogError(l.reason);
+        if (!mounted) return;
         setState(() {
           _isLoading = false;
         });
       },
       (r) {
+        if (!mounted) return;
         setState(() {
           _isLoading = false;
           _exams = r;
@@ -116,60 +120,90 @@ class _SubjectExamPageState extends State<SubjectExamPage> {
     );
   }
 
-  Widget _buildExamCard(CourseModel exam) {
-    final lessonCount = exam.lessons?.length ?? 0;
+  Widget _buildExamCard(ExamModel exam) {
+    // final lessonCount = exam.lessons?.length ?? 0;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerColor: Colors.transparent,
-          expansionTileTheme: ExpansionTileThemeData(
-            iconColor: AppColors.primary,
-            collapsedIconColor: AppColors.primary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+    // return Container(
+    //   decoration: BoxDecoration(
+    //     color: Colors.white,
+    //     borderRadius: BorderRadius.circular(16),
+    //     boxShadow: [
+    //       BoxShadow(
+    //         color: Colors.black.withOpacity(0.1),
+    //         blurRadius: 8,
+    //         offset: const Offset(0, 2),
+    //       ),
+    //     ],
+    //   ),
+    //   child: Theme(
+    //     data: Theme.of(context).copyWith(
+    //       dividerColor: Colors.transparent,
+    //       expansionTileTheme: ExpansionTileThemeData(
+    //         iconColor: AppColors.primary,
+    //         collapsedIconColor: AppColors.primary,
+    //         shape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.circular(16),
+    //         ),
+    //         collapsedShape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.circular(16),
+    //         ),
+    //       ),
+    //     ),
+    //     child: ExpansionTile(
+    //       tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    //       childrenPadding: EdgeInsets.only(bottom: 8),
+    //       title: Text(
+    //         exam.title ?? 'Đề thi',
+    //         style: Styles.large.smb,
+    //         maxLines: 2,
+    //         overflow: TextOverflow.ellipsis,
+    //       ),
+    //       children: lessonCount > 0
+    //           ? List.generate(
+    //               lessonCount,
+    //               (index) => _buildLessonItem(exam.lessons![index], index),
+    //             )
+    //           : [
+    //               Padding(
+    //                 padding: EdgeInsets.all(16),
+    //                 child: Text(
+    //                   'Chưa có bài học',
+    //                   style: Styles.medium.secondary,
+    //                   textAlign: TextAlign.center,
+    //                 ),
+    //               ),
+    //             ],
+    //     ),
+    //   ),
+    // );
+    return Button(
+      borderRadius: BorderRadius.circular(16),
+      onPress: () {
+        NavigationHelper.navigate(
+          '${AppRoutes.moduleExam}${ExamModuleRoutes.examQuestions}',
+          args: {
+            'examId': exam.id,
+            'duration': exam.duration,
+            'subjectId': exam.subjectId,
+          },
+        );
+      },
+      child: Container(
+        // height: 50,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            collapsedShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
+          ],
         ),
-        child: ExpansionTile(
-          tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          childrenPadding: EdgeInsets.only(bottom: 8),
-          title: Text(
-            exam.title ?? 'Đề thi',
-            style: Styles.large.smb,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          children: lessonCount > 0
-              ? List.generate(
-                  lessonCount,
-                  (index) => _buildLessonItem(exam.lessons![index], index),
-                )
-              : [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Chưa có bài học',
-                      style: Styles.medium.secondary,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-        ),
+        child: Text(exam.title ?? 'Đề thi'),
       ),
     );
   }

@@ -449,7 +449,10 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Text(question.orderIndex.toString()),
-          DisplayHtml(htmlContent: question.content ?? ''),
+          DisplayHtml(
+            htmlContent: question.content ?? '',
+            dataType: question.dataType,
+          ),
 
           const SizedBox(height: 12),
           if (question.type == 'choice') ...[
@@ -500,6 +503,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                     ),
                     child: DisplayHtml(
                       htmlContent: answer.content ?? '',
+                      dataType: answer.dataType,
                       fontSize: 16,
                       maxWidth: MediaQuery.of(context).size.width - 80,
                     ),
@@ -602,6 +606,7 @@ class _ExamQuestionsPageState extends State<ExamQuestionsPage> {
                     ),
                     child: DisplayHtml(
                       htmlContent: answer.content ?? '',
+                      dataType: answer.dataType,
                       fontSize: 16,
                       maxWidth: MediaQuery.of(context).size.width - 80,
                     ),
